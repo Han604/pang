@@ -61,7 +61,7 @@ const StyledButton = styled.button`
     right: 30px;
     width:30px;
     height:30px;
-    top: 150px;
+    top: 130px;
     border-radius: 50%;
     background-color: white;
     border: none;

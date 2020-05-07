@@ -74,6 +74,8 @@ const signupHandler = async (req, res) => {
                 following: [],
                 followedBy: [], 
                 avatar: null,
+                wardrobe: [],
+                lookbook: [],
             }
             console.log(data, 'testdata')
             addUserToDatabase(data)
@@ -82,14 +84,15 @@ const signupHandler = async (req, res) => {
     })
 }
 
-const postHandler = async (req, res) => { //takes _id, body, img <optional>, interactedby, comments {_id, link, username, description}
+const postHandler = async (req, res) => { //takes user_id, body, img <optional>, interactedby, comments {_id, link, username, description}
     console.log(req.body,'CONSOLE LOG REQ BODY')
-    const {imgURL, description, _id} = req.body;
+    const {imgURL, description, user_id} = req.body;
     const data = {
         imgURL: imgURL,
         description: description,
-        _id: _id,
-        comments: []
+        user_id: user_id,
+        comments: [],
+        _id: shortid()
     }
     try {
         await client.connect()
@@ -144,4 +147,55 @@ const userFetchHandler = async (req, res) => {
     })
 }
 
-module.exports = {signinHandler, signupHandler, postHandler, readHandler, userFetchHandler};
+const changeAvatarHandler = async (req, res) => {
+    const {imgURL, user_id} = req.body;
+    console.log(imgURL, user_id);
+    await client.connect();
+    const db = client.db('pang');
+    await db.collection('users').update({_id: user_id}, {$set : {avatar:imgURL}}, (err, result) => {
+        console.log(result)
+        if (result) {
+            res.status(200).json({status: 200, data: result})
+        } else {
+            res.status(400).json({status: 400, message:'ERROR'})
+        }
+    })
+}
+
+const followUnfollowHandler = async (req, res) => {
+    const _id = req.params._id;
+    const userId = req.params.userId;
+    const action = req.params.action;
+
+    if (action === false) {
+        await client.connect();
+        const db = client.db('pang');
+        await db.collection('users').update({_id: _id}, {$push : { followedBy : userId}}, (err, result) => {
+            if(result) {
+                db.collection('users').update({_id: userId}, {$push : { following : _id}}, (err, result) => {
+                    if (result) {
+                        res.status(200).json({status: 200, data: result})
+                    }
+                })
+            } else {
+                res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
+            }
+        })
+    } else {
+        await client.connect();
+        const db = client.db('pang');
+        await db.collection('users').update({_id: _id}, {$pull : { followedBy : userId}}, (err, result) => {
+            if(result) {
+                db.collection('users').update({_id: userId}, {$pull : { following : _id}}, (err, result) => {
+                    if (result) {
+                        res.status(200).json({status: 200, data: result})
+                    }
+                })
+            } else {
+                res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
+            }
+        })
+    }
+}
+
+module.exports = {followUnfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};
