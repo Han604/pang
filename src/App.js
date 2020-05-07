@@ -8,6 +8,8 @@ import './App.css'
 import Splashscreen from './components/Splashscreen/Splashscreen'
 import Homefeed from "./components/Homefeed/Homefeed";
 import Profile from "./components/Profile/Profile";
+import LookbookEditor from './components/LookbookEditor/LookbookEditor'
+import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor'
 
 function App() {
   return (
@@ -21,6 +23,12 @@ function App() {
         </Route>
         <Route exact path='/profile/:_id'>
           <Profile />
+        </Route>
+        <Route exact path='/lookbook'>
+          <LookbookEditor/>
+        </Route>
+        <Route exact path ='/wardrobe'>
+          <WardrobeEditor/>
         </Route>
       </Switch>
     </Router>

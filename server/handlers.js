@@ -198,4 +198,18 @@ const followUnfollowHandler = async (req, res) => {
     }
 }
 
-module.exports = {followUnfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};
+const lookbookHandler = async (req, res) => {
+    const {user_id, name, lookbook} = req.body;
+    console.log(lookbook, 'lookbook')
+    await client.connect();
+    const db = client.db('pang');
+    await db.collection('users').updateOne({_id: user_id}, {$push : { lookbook : {name: name, looks: lookbook}}}, (err, result) => {
+        if (result) {
+            res.status(200).json({status: 200, data: result})
+        } else {
+            res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
+        }
+    })
+}
+
+module.exports = {lookbookHandler, followUnfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};

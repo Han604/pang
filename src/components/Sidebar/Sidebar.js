@@ -27,12 +27,12 @@ const Sidebar = ({setSidebarToggle, sidebarToggle}) => {
                     </NavLink>
                 </StyledLi>
                 <StyledLi>
-                    <NavLink exact to = {`/home`}>
+                    <NavLink exact to = {`/lookbook`}>
                         LOOKBOOK
                     </NavLink>
                 </StyledLi>
                 <StyledLi>
-                    <NavLink exact to = {`/home`}>
+                    <NavLink exact to = {`/wardrobe`}>
                         WARDROBE
                     </NavLink>
                 </StyledLi>

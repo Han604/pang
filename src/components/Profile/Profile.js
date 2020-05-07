@@ -6,7 +6,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import Header from '../Header/Header';
 import Wardrobe from '../Wardrobe/Wardrobe';
-import Lookbook from '../LookBook/LookBook';
+import Lookbook from '../Lookbook/Lookbook';
 import NewAvatar from '../NewAvatar/NewAvatar';
 
 //icons
