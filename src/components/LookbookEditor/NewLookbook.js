@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useSelector } from 'react-redux';
-import fetch from 'node-fetch';
 
 const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
     const [lookbookName, setLookbookName] = React.useState('')
@@ -48,7 +47,7 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
             if(data.secure_url) {
                 setImageURL(data.secure_url)
             } else {
-                console.log('big ass error');
+                console.log('big error');
             }
     })}
 
@@ -67,6 +66,7 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
         setDescription('')
         setImageURL(null)
     }
+    console.log(lookbookArray)
     return (
         <>
         <BodyDiv>
@@ -87,8 +87,8 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
 const StyledInput = styled.input`
     background-color: white;
     border: 1px solid grey;
-    margin-top: 12px;
     text-align: center;
+    margin-bottom: 12px;
 `
 
 const OpacityDiv = styled.div`
@@ -103,6 +103,7 @@ const OpacityDiv = styled.div`
 const StyledFile = styled.input`
     margin-left: 100px;
     background-color: white;
+    margin-bottom: 12px;
 `
 
 const StyledUpload = styled.input`

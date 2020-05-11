@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
 import Header from '../Header/Header';
@@ -25,21 +25,27 @@ const Profile = () => {
     const history = useHistory()
 
     const state = useSelector(state => state);
+    console.log(state)
     if (!state.users.email) {
         history.push('/')
     }
-
     const followUnfollow = () => {
-        if (following) {
-            fetch(`api/user/${_id}/${state.users._id}/unfollow`)
+        console.log(state.users.following.includes(user.data._id))
+        console.log(state.users.following)
+        console.log(user.data._id)
+        if (state.users.following.includes(user.data._id)) {
+            fetch(`/api/user/${_id}/${state.users._id}/unfollow`, {
+                method: 'PUT',
+                headers: {'content-type' : 'application/json'},
+            })
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
-                    setFollowing(false);
+                    setFollowing(false); 
                 }
             })
         } else {
-            fetch(`api/user/${_id}/${state.users._id}/follow`, {
+            fetch(`/api/user/${_id}/${state.users._id}/follow`, {
                 method: 'PUT',
                 headers: {'content-type' : 'application/json'},
             })
@@ -79,10 +85,10 @@ const Profile = () => {
             <NewAvatar refreshUser = {refreshUser} setRefreshUser = {setRefreshUser}setAvatarToggle={setAvatarToggle} avatarToggle={avatarToggle}/>
             <Header title={user.data.username}/>
             {following === true ?
-                <StyledButton onClick={() => followUnfollow}><BsPerson/></StyledButton> :
+                <StyledButton onClick={() => followUnfollow()}><BsPerson/></StyledButton> :
                 user.data._id === state.users._id ? 
                 <StyledButton onClick={()=>setAvatarToggle(true)}><FiCamera/></StyledButton> :
-                <StyledButton onClick={() => followUnfollow}><BsPersonFill/></StyledButton>
+                <StyledButton onClick={() => followUnfollow()}><BsPersonFill/></StyledButton>
             }
             <Wrapper>
                 <AvatarWrapper>

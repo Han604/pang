@@ -6,7 +6,6 @@ import Sidebar from '../Sidebar/Sidebar'
 
 const Header = ({title}) => {
     const [sidebarToggle, setSidebarToggle] = React.useState('false')
-    console.log(sidebarToggle)
     return(
         <>
             {sidebarToggle === 'true' ? <Sidebar sidebarToggle={sidebarToggle} setSidebarToggle={setSidebarToggle}/> : <Sidebar setSidebarToggle={setSidebarToggle} sidebarToggle={sidebarToggle}/>}

@@ -3,11 +3,24 @@ import styled from 'styled-components';
 
 const Lookbook = ({user}) => {
     if (user.data.lookbook.length) {
+        console.log(user)
         return (
             <Wrapper>
-                {user.data.lookbook.forEach(item => {
-                    return <img url={item.imgURL}/>
-                })}
+                <LookbookDiv>
+                    {user.data.lookbook.map(lookbook => {
+                        console.log(lookbook)
+                        return (
+                            <>
+                                <div style={{margin:'6px 0 6px 12px'}}>{lookbook.name}</div>
+                                <ScrollingDiv>
+                                    {lookbook.looks.map((item, index) => {
+                                        return <LookbookItem key={index + 1} src={item.imgURL} alt={item.description}/>
+                                    })}
+                                </ScrollingDiv>
+                            </>
+                        )
+                    })}
+                </LookbookDiv>
             </Wrapper>
         )
     } else {
@@ -17,9 +30,26 @@ const Lookbook = ({user}) => {
 
 const Wrapper = styled.div`
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(auto-fill, 100px);
+    overflow-y:auto;
+`
+
+const ScrollingDiv = styled.div`
+    overflow-x: auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    margin-left: 12px;
+`
+
+const LookbookItem = styled.img`
+    height: 100px;
+    margin-right: 12px;
+    object-fit: contain;
+`
+
+const LookbookDiv = styled.div`
+    display: flex;
+    flex-direction: column;
 `
 
 export default Lookbook

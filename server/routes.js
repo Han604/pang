@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { lookbookHandler, followUnfollowHandler, changeAvatarHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler } = require('./handlers')
+const {commentHandler, individualPostHandler, exploreHandler, deleteWardrobeHandler, wardrobeHandler, deleteLookbookHandler, lookbookHandler, followUnfollowHandler, changeAvatarHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler } = require('./handlers')
 
 router.post('/api/signup', signupHandler)
 
@@ -8,14 +8,27 @@ router.post('/api/post', postHandler)
 
 router.post('/api/signin', signinHandler)
 
+router.get('/api/post/:postId', individualPostHandler)
+
+router.get('/api/explore', exploreHandler)
+
 router.get('/api/read/:_id', readHandler)
 
 router.get('/api/user/:_id', userFetchHandler)
 
+router.put('/api/newcomment', commentHandler)
+
 router.put('/api/newlookbook', lookbookHandler)
+
+router.put('/api/deletelookbook', deleteLookbookHandler)
 
 router.put('/api/user/:_id/:userId/:action', followUnfollowHandler)
 
 router.put('/api/user/avatar', changeAvatarHandler)
+
+router.put('/api/newwardrobe', wardrobeHandler)
+
+router.put('/api/deletewardrobe', deleteWardrobeHandler)
+
 module.exports = router;
 

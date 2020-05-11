@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useSelector } from 'react-redux'
 
-const NewPost = ({setNewPostToggle}) => {
+const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
 
     const [image, setImage] = React.useState(null)
     const [description, setDescription] = React.useState('')
@@ -30,12 +30,14 @@ const NewPost = ({setNewPostToggle}) => {
                     imgURL: imgURL,
                     description: description,
                     user_id: user._id,
+                    username: user.username
                 })
             })
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
                     setNewPostToggle(false)
+                    setFeedRefresher(feedRefresher + 1)
                 } else {
                     console.log('SOMETHING WENT WRONG PLEASE TRY AGAIN')
                 }

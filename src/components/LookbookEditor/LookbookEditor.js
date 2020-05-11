@@ -27,6 +27,22 @@ const LookbookEditor = () => {
 
     console.log(userLookbook);
 
+    const deleteLookbook = (name) => {
+        fetch('/api/deletelookbook', {
+            method: 'PUT',
+            headers: {'content-type' : 'application/json'},
+            body: JSON.stringify({
+                name: name,
+                _id: user._id
+            })
+        })
+        .then(res=> res.json())
+        .then(data => {
+            setLookbookRefresher(true)
+            console.log(data)
+        })
+    }
+
     if(userLookbook) {
         if(userLookbook.length === 0) {
             return (
@@ -39,36 +55,54 @@ const LookbookEditor = () => {
             <FooterDiv onClick = {() => setNewLookbookToggle(true)}>ADD NEW LOOKBOOK</FooterDiv>
             </>
         )
-    } else if (userLookbook.length === 1){
-        return (
+        } else if (userLookbook.length === 1){
+            return (
             <>
             {newLookbookToggle ? <NewLookbook setLookbookRefresher={setLookbookRefresher} setNewLookbookToggle={setNewLookbookToggle}/> : null}
             <Header title={'LOOKBOOK'}/>
             <Wrapper>
-                <div>
-                    <img src={userLookbook[0].imgURL} alt={userLookbook[0].description}/>
+                <div style={{display:'flex', flexDirection:'column'}}>
+                    <div style={{display:'flex', marginBottom:'12px'}}>
+                        <LookbookTitle>{userLookbook[0].name}</LookbookTitle>
+                        <DeleteButton onClick={() => deleteLookbook(userLookbook[0].name)}>X</DeleteButton>
+                    </div>
+                    <LookbookDiv>
+                        {userLookbook[0].looks.map(look => {
+                            console.log('pang')
+                            console.log(look.imgURL)
+                            return (
+                                <LookbookImg src={look.imgURL} alt={look.description}/>
+                                )
+                            })}
+                    </LookbookDiv>
                 </div>
             </Wrapper>
             <FooterDiv onClick = {() => setNewLookbookToggle(true)}>ADD NEW LOOKBOOK</FooterDiv>
             </>
         )
-    } else {
-        return (
+        } else {
+            return (
             <>
             {newLookbookToggle ? <NewLookbook setLookbookRefresher={setLookbookRefresher} setNewLookbookToggle={setNewLookbookToggle}/> : null}
             <Header title={'LOOKBOOK'}/>
             <Wrapper>
-                <div>
-                    {userLookbook.forEach(lookbook => {
-                        return (
-                            <div>
-                                {lookbook.forEach(look => {
-                                    return <img src={look.imgURL} alt={look.description}/>
-                                })}
+                {userLookbook.map(lookbook => {
+                    return (
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                            <div style={{display:'flex', marginBottom:'12px'}}>
+                                <LookbookTitle>{lookbook.name}</LookbookTitle>
+                                <DeleteButton onClick={() => deleteLookbook(lookbook.name)}>X</DeleteButton>
                             </div>
-                        )
-                    })}
-                </div>
+                            <LookbookDiv>  
+                                {lookbook.looks.map(look => {
+                                    return (
+                                        <LookbookImg src={look.imgURL} alt={look.description}/>
+                                    )
+                                })}
+                            </LookbookDiv>
+                        </div>
+                    )
+                })}
             </Wrapper>
             <FooterDiv onClick = {() => setNewLookbookToggle(true)}>
                 ADD NEW LOOKBOOK
@@ -78,12 +112,41 @@ const LookbookEditor = () => {
     }} return <div style={{display:'none'}}>invisible</div>
 }
 
+const DeleteButton = styled.button`
+    height: 20px;
+    width: 20px;
+    outline: none;
+    border: none;
+    margin-top: 12px;
+    margin-left: 12px;
+    background-color: white;
+`
+
+const LookbookTitle = styled.div`
+    margin-left: 12px;
+    margin-top: 12px;
+`
+
+const LookbookDiv = styled.div`
+    display: flex;
+    overflow-x: auto;
+    margin-left: 12px;
+    margin-bottom : 12px;
+`
+
+const LookbookImg = styled.img`
+    height: 100px;
+    margin-right: 5px; 
+    object-fit: contain;
+`
+
 const Wrapper = styled.div`
     background-color: white;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 `
 
 const FooterDiv = styled.div`

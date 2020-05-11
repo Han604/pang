@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import Header from '../Header/Header'
 import NewPost from '../NewPost/NewPost'
+import FeedPost from '../FeedPost/FeedPost'
 
 import { useHistory } from 'react-router-dom'
 
@@ -12,6 +13,7 @@ const Homefeed = () => {
 
     const [posts, setPosts] = React.useState(undefined);
     const [newPostToggle, setNewPostToggle] = React.useState(false)
+    const [feedRefresher, setFeedRefresher] = React.useState(0)
     const user = useSelector(state => state.users);
 
     const createNewPost = () => {
@@ -23,16 +25,29 @@ const Homefeed = () => {
         history.push('/')
     }
 
-    if(posts === 'loading') {
+    React.useEffect(() => {
+
+        fetch(`/api/read/${user._id}`)
+        .then(res => res.json())
+        .then(data => {
+            setPosts(data);
+        })
+    }, [feedRefresher])
+
+    console.log(posts)
+
+    if(!posts) {
         return <div>loading...</div>
     } else if (posts) {
         return (
             <>
                 {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
                 <Header title={user.username}/>
-                <div>No posts! Follow someone</div>
+                {posts.data.map((post, index) => {
+                    return <FeedPost key={index + 1} post={post}/>
+                })}
                 <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost setNewPostToggle={setNewPostToggle}></NewPost>: null}
+                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
         ) 
     } else 
@@ -40,9 +55,9 @@ const Homefeed = () => {
             <>
                 {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
                 <Header title={user.username}/>
-                <div>replace this with the user feed</div>
+                <div>NO POSTS, FOLLOW SOMEONE</div>
                 <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost setNewPostToggle={setNewPostToggle}></NewPost>: null}
+                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
     )
 }
@@ -57,7 +72,7 @@ const OpacityDiv = styled.div`
 `
 
 const StyledButton = styled.button`
-    position: absolute;
+    position: fixed;
     right: 30px;
     width:30px;
     height:30px;

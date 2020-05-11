@@ -10,6 +10,8 @@ import Homefeed from "./components/Homefeed/Homefeed";
 import Profile from "./components/Profile/Profile";
 import LookbookEditor from './components/LookbookEditor/LookbookEditor'
 import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor'
+import Explore from './components/Explore/Explore'
+import IndividualPost from './components/IndividualPost/IndividualPost'
 
 function App() {
   return (
@@ -29,6 +31,12 @@ function App() {
         </Route>
         <Route exact path ='/wardrobe'>
           <WardrobeEditor/>
+        </Route>
+        <Route exact path ='/explore'>
+          <Explore/>
+        </Route>
+        <Route exact path ='/post/:postId'>
+          <IndividualPost/>
         </Route>
       </Switch>
     </Router>

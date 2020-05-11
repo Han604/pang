@@ -1,11 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { NavLink, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+
+import { unloadUserData } from '../../actions'
 
 const Sidebar = ({setSidebarToggle, sidebarToggle}) => {
     const user = useSelector(state => state.users);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const signOut = () => {
+        history.push('/')
+        dispatch(unloadUserData)
+    }
     if(sidebarToggle === 'true') {
         return (
             <>
@@ -22,7 +31,7 @@ const Sidebar = ({setSidebarToggle, sidebarToggle}) => {
                     </NavLink>
                 </StyledLi>
                 <StyledLi>
-                    <NavLink exact to = {`/home`}>
+                    <NavLink exact to = {`/explore`}>
                         EXPLORE
                     </NavLink>
                 </StyledLi>
@@ -34,11 +43,6 @@ const Sidebar = ({setSidebarToggle, sidebarToggle}) => {
                 <StyledLi>
                     <NavLink exact to = {`/wardrobe`}>
                         WARDROBE
-                    </NavLink>
-                </StyledLi>
-                <StyledLi>
-                    <NavLink exact to = {`/home`}>
-                        MESSAGES
                     </NavLink>
                 </StyledLi>
                 <StyledLi>
@@ -92,6 +96,7 @@ const StyledList = styled.ul`
     a {
         color: black;
         text-decoration: none;
+        font-size: 400;
     }
 `
 

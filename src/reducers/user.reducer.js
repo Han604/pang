@@ -22,12 +22,19 @@ export default function authReducer(state = initialState, action) {
                 _id: data.data._id,
                 avatar: data.data.avatar,
                 wardrobe: data.data.wardrobe,
-                lookbook: data.data.lookbook
+                lookbook: data.data.lookbook,
+                following: data.data.following,
+                followedBy: data.data.followedBy
             }
         }
+
+        case 'UNLOAD_USER_DATA' : {
+            return{
+                ...state
+            }
+        }
+
         default: {
             return state;
-        }
-    }
-    
+    }}
 }

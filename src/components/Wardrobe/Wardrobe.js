@@ -5,8 +5,8 @@ const Wardrobe = ({user}) => {
     if (user.data.wardrobe.length >= 1) {
         return (
             <Wrapper>                
-                {user.data.wardrobe.forEach(item => {
-                    return <img url={item.imgURL}/>
+                {user.data.wardrobe.map(item => {
+                    return <ImageItem src={item.imgURL} alt={item.description}/>
                 })}
             </Wrapper>
         )
@@ -15,11 +15,17 @@ const Wardrobe = ({user}) => {
     }
 }
 
+const ImageItem = styled.img`
+    height: 100px;
+    object-fit: contain;
+    border: 1px solid white;
+`
+
 const Wrapper = styled.div`
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-rows: 100px;
 `
 
 export default Wardrobe
