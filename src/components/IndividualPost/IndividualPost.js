@@ -25,9 +25,11 @@ const IndividualPost = () => {
         history.push('/')
     }
     React.useEffect(() => {
-        fetch(`/api/post/${postId}`)
-        .then(res=> res.json())
-        .then(data=>setPost(data))
+        if(user._id) {
+            fetch(`/api/post/${postId}`)
+            .then(res=> res.json())
+            .then(data=>setPost(data)) 
+        }
     },[refresher])
 
     console.log(post)
@@ -43,7 +45,7 @@ const IndividualPost = () => {
                     {post.data.imgURL ? <PostImage src={post.data.imgURL} alt={'IMAGE CONTENT'}/> : null}
                 <InfoDiv>
                     <UnderlineDiv onClick = {(ev)=> toProfile(ev)}>
-                        <div style={{marginLeft: '12px', fontWeight:'bold', marginBottom:'6px'}}>{post.data.username}</div>
+                        <UsernameDiv>{post.data.username}</UsernameDiv>
                         <DescriptionDiv>
                             {post.data.description}
                         </DescriptionDiv>
@@ -74,6 +76,11 @@ const IndividualPost = () => {
         )
     }
 }
+
+const UsernameDiv = styled.div`
+    margin: 6px 0 0 12px;
+    font-weight: bold;
+`
 
 const UnderlineDiv = styled.div`
     width: 100%;
@@ -112,7 +119,7 @@ const CommentDiv = styled.div`
 `
 
 const DescriptionDiv = styled.div`
-    margin: 6px 0 6px 12px;
+    margin: 0 0 6px 12px;
     width: 93%;
 `
 

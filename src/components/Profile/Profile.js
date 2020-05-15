@@ -10,7 +10,7 @@ import Lookbook from '../Lookbook/Lookbook';
 import NewAvatar from '../NewAvatar/NewAvatar';
 
 //icons
-import { BsPersonFill, BsPerson } from "react-icons/bs";
+import { BsFillPersonPlusFill, BsFillPersonCheckFill } from "react-icons/bs";
 import { FiCamera } from 'react-icons/fi'
 
 const Profile = () => {
@@ -29,54 +29,53 @@ const Profile = () => {
     if (!state.users.email) {
         history.push('/')
     }
-    const followUnfollow = () => {
-        console.log(state.users.following.includes(user.data._id))
-        console.log(state.users.following)
-        console.log(user.data._id)
-        if (state.users.following.includes(user.data._id)) {
-            fetch(`/api/user/${_id}/${state.users._id}/unfollow`, {
-                method: 'PUT',
-                headers: {'content-type' : 'application/json'},
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === 200) {
-                    setFollowing(false); 
-                }
-            })
-        } else {
-            fetch(`/api/user/${_id}/${state.users._id}/follow`, {
-                method: 'PUT',
-                headers: {'content-type' : 'application/json'},
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === 200) {
-                    setFollowing(true);
-                }
-            })
-        }
-    }
-
-    React.useEffect(()=> {
-        console.log('pang')
-        setLoading('loading');
-        fetch(`/api/user/${_id}`)
+    const follow = () => {
+        fetch(`/api/user/follow/${_id}/${state.users._id}`, {
+            method: 'PUT',
+            headers: {'content-type' : 'application/json'},
+        })
         .then(res => res.json())
         .then(data => {
             if(data.status === 200) {
-                setUser(data)
-                if(data.data.followedBy.includes(`${state.users._id}`) === true) {
-                    setFollowing(true)
-                } else {
-                    setFollowing(false)
-                }
-                setLoading('idle')
-            } else {
-                setUser(404)
-                setLoading('error')
+                setFollowing(true);
             }
         })
+    }
+
+    const unfollow = () => {
+        fetch(`/api/user/unfollow/${_id}/${state.users._id}`, {
+            method: 'PUT',
+            headers: {'content-type' : 'application/json'},
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 200) {
+                setFollowing(false)
+            }
+        })
+    }
+
+
+    React.useEffect(()=> {
+        if (state.users._id) {
+            setLoading('loading');
+            fetch(`/api/user/${_id}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 200) {
+                    setUser(data)
+                    if(data.data.followedBy.includes(`${state.users._id}`) === true) {
+                        setFollowing(true)
+                    } else {
+                        setFollowing(false)
+                    }
+                    setLoading('idle')
+                } else {
+                    setUser(404)
+                    setLoading('error')
+                }
+            })
+        }
     },[refreshUser])
 
     return (
@@ -85,10 +84,10 @@ const Profile = () => {
             <NewAvatar refreshUser = {refreshUser} setRefreshUser = {setRefreshUser}setAvatarToggle={setAvatarToggle} avatarToggle={avatarToggle}/>
             <Header title={user.data.username}/>
             {following === true ?
-                <StyledButton onClick={() => followUnfollow()}><BsPerson/></StyledButton> :
+                <StyledButton onClick={() => unfollow()}><BsFillPersonCheckFill/></StyledButton> :
                 user.data._id === state.users._id ? 
                 <StyledButton onClick={()=>setAvatarToggle(true)}><FiCamera/></StyledButton> :
-                <StyledButton onClick={() => followUnfollow()}><BsPersonFill/></StyledButton>
+                <StyledButton onClick={() => follow()}><BsFillPersonPlusFill/></StyledButton>
             }
             <Wrapper>
                 <AvatarWrapper>

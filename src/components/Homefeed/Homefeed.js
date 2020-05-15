@@ -26,19 +26,22 @@ const Homefeed = () => {
     }
 
     React.useEffect(() => {
-
-        fetch(`/api/read/${user._id}`)
-        .then(res => res.json())
-        .then(data => {
-            setPosts(data);
-        })
+        if(user._id) {
+            fetch(`/api/read/${user._id}`)
+            .then(res => res.json())
+            .then(data => {
+                setPosts(data);
+            })
+        } else {
+            setPosts(1)
+        }
     }, [feedRefresher])
 
-    console.log(posts)
+    console.log(posts, 'posts')
 
     if(!posts) {
         return <div>loading...</div>
-    } else if (posts) {
+    } else if (posts.data.length >= 1) {
         return (
             <>
                 {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
@@ -50,7 +53,7 @@ const Homefeed = () => {
                 {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
         ) 
-    } else 
+    } else if (posts.data.length === 0)
         return (
             <>
                 {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}

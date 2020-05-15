@@ -16,6 +16,7 @@ const client = new MongoClient('mongodb://localhost:27017', {
 
 const signinHandler = async (req, res) => {
     const { email, password } = req.body
+    console.log('pang')
     await client.connect();
     const db = client.db('pang');
     await db.collection('users')
@@ -113,16 +114,21 @@ const readHandler = async (req, res) => {
     await client.connect()
     const db = client.db('pang');
     try { 
-        await db.collection('users').findOne({_id: userId }, (err, result) => { 
-            const following = result.following;
-            following.forEach(user => {
-                db.collection('posts').find({user_id: user})
-                .toArray((err, result) => { 
-                    result.forEach(post => {
-                        resData.push(post)
-                    }) 
+        await db.collection('users').findOne({_id: userId }, (err, result) => {
+            console.log(result.following)
+            console.log(result.following == [])
+            if(result.following.length) {
+                console.log('pangy')
+                const following = result.following;
+                following.forEach(user => {
+                    db.collection('posts').find({user_id: user})
+                    .toArray((err, result) => { 
+                        result.forEach(post => {
+                            resData.push(post)
+                        }) 
+                    })
                 })
-            })
+            }
             db.collection('posts').find({user_id: userId})
             .toArray((err, result) => {
                 console.log(result, 'your posts')
@@ -163,43 +169,45 @@ const changeAvatarHandler = async (req, res) => {
     })
 }
 
-const followUnfollowHandler = async (req, res) => {
+const followHandler = async (req, res) => {
     const _id = req.params._id;
     const userId = req.params.userId;
-    const action = req.params.action;
-    console.log(_id, userId, action, 'follow unfollow data')
 
-    if (action === 'follow') {
-        console.log('pang')
-        await client.connect();
-        const db = client.db('pang');
-        await db.collection('users').update({_id: _id}, {$push : { followedBy : userId}}, (err, result) => {
-            if(result) {
-                db.collection('users').update({_id: userId}, {$push : { following : _id}}, (err, result) => {
-                    if (result) {
-                        res.status(200).json({status: 200, data: result})
-                    }
-                })
-            } else {
-                res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
-            }
-        })
-    } else {
-        await client.connect();
-        const db = client.db('pang');
-        await db.collection('users').update({_id: _id}, {$pull : { followedBy : userId}}, (err, result) => {
-            if(result) {
-                db.collection('users').update({_id: userId}, {$pull : { following : _id}}, (err, result) => {
-                    if (result) {
-                        res.status(200).json({status: 200, data: result})
-                    }
-                })
-            } else {
-                res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
-            }
-        })
-    }
+    await client.connect();
+    const db = client.db('pang');
+    await db.collection('users').update({_id: _id}, {$push : { followedBy : userId}}, (err, result) => {
+        if (result) {
+            db.collection('users').update({_id: userId}, {$push : { following : _id}}, (err, result) => {
+                if (result) {
+                    res.status(200).json({status:200, data: result})
+                } else {
+                    res.status(400).json({status: 400, message: 'User Not Found'})
+                }
+            })
+        } else {
+            res.status(400).json({status: 400, message: 'User Not Found'})
+        }
+    })
 }
+
+const unfollowHandler = async (req, res) => {
+    await client.connect();
+    const db = client.db('pang');
+    await db.collection('users').update({_id: _id}, {$pull : { followedBy : userId}}, (err, result) => {
+        if(result) {
+            db.collection('users').update({_id: userId}, {$pull : { following : _id}}, (err, result) => {
+                if (result) {
+                    res.status(200).json({status: 200, data: result})
+                } else {
+                    res.status(400).json({status: 400, message: 'Error user not found'})
+                }
+            })
+        } else {
+            res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
+        }
+    })
+}
+
 
 const wardrobeHandler = async (req, res) => {
     const {_id, imgURL, link, brand, itemName} = req.body;
@@ -320,4 +328,4 @@ const individualPostHandler = async (req, res) => {
     })
 }
 
-module.exports = { commentHandler, individualPostHandler, exploreHandler, wardrobeHandler, deleteWardrobeHandler, deleteLookbookHandler, lookbookHandler, followUnfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};
+module.exports = { commentHandler, individualPostHandler, exploreHandler, wardrobeHandler, deleteWardrobeHandler, deleteLookbookHandler, lookbookHandler, followHandler, unfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};
