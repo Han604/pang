@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useSelector } from 'react-redux';
 
-const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
+const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher, lookbookRefresher}) => {
     const [lookbookName, setLookbookName] = React.useState('')
     const [image, setImage] = React.useState(null)
     const [imageURL, setImageURL] = React.useState(null)
@@ -26,7 +26,7 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher}) => {
         .then(res=> res.json())
         .then(data=> {
             console.log(data);
-            setLookbookRefresher(true)
+            setLookbookRefresher( 1 ? lookbookRefresher -1 : lookbookRefresher + 1)
             setNewLookbookToggle(false);
         })
     }

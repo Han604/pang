@@ -2,19 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Header from '../Header/Header'
+import Loading from '../Loading/Loading';
 
+import {useSelector} from 'react-redux'
 import {useHistory} from 'react-router-dom'
 
 const Explore = () => {
     const history = useHistory()
     const [posts, setPosts] = React.useState(null);
 
+    const user = useSelector(state => state.users)
+    
     React.useEffect(() => {
-        fetch('/api/explore')
-        .then(res => res.json())
-        .then(data => setPosts(data))
+        if (!user._id) {
+            history.push('/')
+        } else {
+            fetch('/api/explore')
+            .then(res => res.json())
+            .then(data => setPosts(data))
+        }
     },[])
-    console.log(posts)
     if (posts) {
         return (
             <>
@@ -31,7 +38,7 @@ const Explore = () => {
             </>
             
         )
-    } else return <div>LOADING...</div>
+    } else return <Loading/>
 }
 
 const Wrapper = styled.div`

@@ -191,10 +191,13 @@ const followHandler = async (req, res) => {
 }
 
 const unfollowHandler = async (req, res) => {
+    const _id = req.params._id;
+    const userId = req.params.userId;
     await client.connect();
     const db = client.db('pang');
     await db.collection('users').update({_id: _id}, {$pull : { followedBy : userId}}, (err, result) => {
         if(result) {
+            console.log('working')
             db.collection('users').update({_id: userId}, {$pull : { following : _id}}, (err, result) => {
                 if (result) {
                     res.status(200).json({status: 200, data: result})

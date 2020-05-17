@@ -11,7 +11,8 @@ import Profile from "./components/Profile/Profile";
 import LookbookEditor from './components/LookbookEditor/LookbookEditor'
 import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor'
 import Explore from './components/Explore/Explore'
-import IndividualPost from './components/IndividualPost/IndividualPost'
+import IndividualPost from './components/IndividualPost/IndividualPost';
+import Loading from './components/Loading/Loading'
 
 function App() {
   return (

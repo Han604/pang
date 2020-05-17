@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import Header from '../Header/Header'
 import NewPost from '../NewPost/NewPost'
 import FeedPost from '../FeedPost/FeedPost'
+import Loading from '../Loading/Loading'
 
 import { useHistory } from 'react-router-dom'
 
@@ -40,7 +41,7 @@ const Homefeed = () => {
     console.log(posts, 'posts')
 
     if(!posts) {
-        return <div>loading...</div>
+        return <Loading/>
     } else if (posts.data.length >= 1) {
         return (
             <>

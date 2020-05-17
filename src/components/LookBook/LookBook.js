@@ -3,12 +3,10 @@ import styled from 'styled-components';
 
 const Lookbook = ({user}) => {
     if (user.data.lookbook.length) {
-        console.log(user)
         return (
             <Wrapper>
                 <LookbookDiv>
                     {user.data.lookbook.map(lookbook => {
-                        console.log(lookbook)
                         return (
                             <>
                                 <div style={{margin:'6px 0 6px 12px'}}>{lookbook.name}</div>
@@ -24,7 +22,7 @@ const Lookbook = ({user}) => {
             </Wrapper>
         )
     } else {
-        return <div>USER HASN'T CREATED ANY LOOKBOOKS YET</div>
+        return <div style={{textAlign:'center', marginTop:'25px'}}>USER HASN'T CREATED ANY LOOKBOOKS YET</div>
     }
 }
 

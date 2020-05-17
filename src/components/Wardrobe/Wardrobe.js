@@ -11,7 +11,7 @@ const Wardrobe = ({user}) => {
             </Wrapper>
         )
     } else {
-        return <div>USER HASN'T STARTED THEIR WARDROBE YET</div>
+        return <div style={{textAlign:'center', marginTop:'25px'}}>USER HASN'T STARTED THEIR WARDROBE YET</div>
     }
 }
 

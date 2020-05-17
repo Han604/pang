@@ -20,9 +20,7 @@ const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
         })
         .then(res=>res.json())
         .then(data => {
-            console.log(data.secure_url)
             const imgURL = data.secure_url;
-            console.log(imgURL, description, user._id, 'req body')
             fetch('/api/post', {
                 method: 'POST',
                 headers: {'content-type': 'application/json'},

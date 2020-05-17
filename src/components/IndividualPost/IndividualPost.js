@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux'
 import Header from '../Header/Header'
 import NewComment from '../NewComment/NewComment'
 import IndividualComment from './IndividualComment'
+import Loading from '../Loading/Loading';
 
 const IndividualPost = () => {
     const [post, setPost] = React.useState(null)
@@ -35,7 +36,7 @@ const IndividualPost = () => {
     console.log(post)
 
     if (!post) {
-        return <div>LOADING...</div>
+        return <Loading/>
     } else {
         return (
             <>

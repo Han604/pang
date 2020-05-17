@@ -32,7 +32,6 @@ const NewAvatar = ({avatarToggle, setAvatarToggle, setRefreshUser, refreshUser})
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
-                    console.log(data);
                     setRefreshUser(refreshUser + 1)
                     setAvatarToggle(false)
                 } else {

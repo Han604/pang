@@ -8,6 +8,7 @@ import Header from '../Header/Header';
 import Wardrobe from '../Wardrobe/Wardrobe';
 import Lookbook from '../Lookbook/Lookbook';
 import NewAvatar from '../NewAvatar/NewAvatar';
+import Loading from '../Loading/Loading';
 
 //icons
 import { BsFillPersonPlusFill, BsFillPersonCheckFill } from "react-icons/bs";
@@ -25,7 +26,6 @@ const Profile = () => {
     const history = useHistory()
 
     const state = useSelector(state => state);
-    console.log(state)
     if (!state.users.email) {
         history.push('/')
     }
@@ -39,10 +39,12 @@ const Profile = () => {
             if(data.status === 200) {
                 setFollowing(true);
             }
-        })
+        }) 
     }
 
+    console.log(refreshUser)
     const unfollow = () => {
+        console.log('unfollow')
         fetch(`/api/user/unfollow/${_id}/${state.users._id}`, {
             method: 'PUT',
             headers: {'content-type' : 'application/json'},
@@ -81,7 +83,7 @@ const Profile = () => {
     return (
         loading === 'idle' ?
         <>
-            <NewAvatar refreshUser = {refreshUser} setRefreshUser = {setRefreshUser}setAvatarToggle={setAvatarToggle} avatarToggle={avatarToggle}/>
+            <NewAvatar refreshUser = {refreshUser} setRefreshUser = {setRefreshUser} setAvatarToggle={setAvatarToggle} avatarToggle={avatarToggle}/>
             <Header title={user.data.username}/>
             {following === true ?
                 <StyledButton onClick={() => unfollow()}><BsFillPersonCheckFill/></StyledButton> :
@@ -111,7 +113,7 @@ const Profile = () => {
                 </InfoDiv>
             </Wrapper>
         </>
-        : <div>LOADING...</div>
+        : <Loading/>
     );
 }
 
