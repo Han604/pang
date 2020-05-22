@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 
 import Header from '../Header/Header'
 import NewPost from '../NewPost/NewPost'
+import FeedPost from '../FeedPost/FeedPost'
+import Loading from '../Loading/Loading'
 
 import { useHistory } from 'react-router-dom'
 
@@ -12,6 +14,7 @@ const Homefeed = () => {
 
     const [posts, setPosts] = React.useState(undefined);
     const [newPostToggle, setNewPostToggle] = React.useState(false)
+    const [feedRefresher, setFeedRefresher] = React.useState(0)
     const user = useSelector(state => state.users);
 
     const createNewPost = () => {
@@ -23,32 +26,48 @@ const Homefeed = () => {
         history.push('/')
     }
 
-    if(posts === 'loading') {
-        return <div>loading...</div>
-    } else if (posts) {
+    React.useEffect(() => {
+        if(user._id) {
+            fetch(`/api/read/${user._id}`)
+            .then(res => res.json())
+            .then(data => {
+                setPosts(data);
+            })
+        } else {
+            setPosts(1)
+        }
+    }, [feedRefresher])
+
+    console.log(posts, 'posts')
+
+    if(!posts) {
+        return <Loading/>
+    } else if (posts.data.length >= 1) {
         return (
             <>
-                {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
+                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
                 <Header title={user.username}/>
-                <div>No posts! Follow someone</div>
+                {posts.data.map((post, index) => {
+                    return <FeedPost key={index + 1} post={post}/>
+                })}
                 <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost setNewPostToggle={setNewPostToggle}></NewPost>: null}
+                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
         ) 
-    } else 
+    } else if (posts.data.length === 0)
         return (
             <>
-                {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
+                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
                 <Header title={user.username}/>
-                <div>replace this with the user feed</div>
+                <div style={{textAlign:'center', marginTop:'25px'}}>NO POSTS, FOLLOW SOMEONE</div>
                 <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost setNewPostToggle={setNewPostToggle}></NewPost>: null}
+                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
     )
 }
 
 const OpacityDiv = styled.div`
-    position: absolute;
+    position: fixed;
     height: 100%;
     width: 100%;
     background-color: grey;
@@ -57,11 +76,11 @@ const OpacityDiv = styled.div`
 `
 
 const StyledButton = styled.button`
-    position: absolute;
+    position: fixed;
     right: 30px;
     width:30px;
     height:30px;
-    top: 150px;
+    top: 130px;
     border-radius: 50%;
     background-color: white;
     border: none;

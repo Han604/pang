@@ -2,13 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useSelector } from 'react-redux'
+import Sidebar from '../Sidebar/Sidebar'
 
 const Header = ({title}) => {
-
+    const [sidebarToggle, setSidebarToggle] = React.useState('false')
     return(
-        <Headerpiece>
-            <TextDiv>{title}</TextDiv>
-        </Headerpiece>
+        <>
+            {sidebarToggle === 'true' ? <Sidebar sidebarToggle={sidebarToggle} setSidebarToggle={setSidebarToggle}/> : <Sidebar setSidebarToggle={setSidebarToggle} sidebarToggle={sidebarToggle}/>}
+            <Headerpiece onClick = {() => setSidebarToggle('true')}>
+                <TextDiv>{title.toUpperCase()}</TextDiv>
+            </Headerpiece>
+        </>
     )
 }
 

@@ -20,12 +20,21 @@ export default function authReducer(state = initialState, action) {
                 name: data.data.name,
                 email: data.data.email,
                 _id: data.data._id,
-                email_verified: false
+                avatar: data.data.avatar,
+                wardrobe: data.data.wardrobe,
+                lookbook: data.data.lookbook,
+                following: data.data.following,
+                followedBy: data.data.followedBy
             }
         }
+
+        case 'UNLOAD_USER_DATA' : {
+            return{
+                ...state
+            }
+        }
+
         default: {
             return state;
-        }
-    }
-    
+    }}
 }

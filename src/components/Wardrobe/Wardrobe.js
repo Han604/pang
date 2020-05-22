@@ -1,42 +1,34 @@
 import React from 'react';
-import styled from 'styled';
-import fetch from 'node-fetch';
+import styled from 'styled-components';
 
-const Wardrobe = () => {
-    const [loading, setLoading] = React.useState(null);
-    const [wardrobe, setWardrobe] = React.useState(null);
+import {Link} from 'react-router-dom'
 
-    React.useEffect(() => {
-        setLoading('loading')
-        fetch(`/api/wardrobe/${_id}`)
-        .then(res=> res.json)
-        .then(data => {
-            if (data.status === 200) {
-                setWardrobe(data)
-                setLoading('idle')
-            } else {
-                console.log(data.message);
-                setLoading('idle')
-            }
-        })
-    })
-
-    if (loading === 'idle') {
+const Wardrobe = ({user}) => {
+    if (user.data.wardrobe.length >= 1) {
         return (
-            <Wrapper>
-                {wardrobe.forEach(item => {
-                    return <img url={item.imgURL}/>
+            <Wrapper>                
+                {user.data.wardrobe.map((item, index) => {
+                    return <Link key={index+1} to = {`/viewer/wardrobe/none/${user.data._id}/${index}`}><ImageItem src={item.imgURL} alt={item.description}/></Link>
                 })}
             </Wrapper>
         )
+    } else {
+        return <div style={{textAlign:'center', marginTop:'25px'}}>USER HASN'T STARTED THEIR WARDROBE YET</div>
     }
 }
 
+const ImageItem = styled.img`
+    height: 100px;
+    width: 100%;
+    object-fit: scale-down;
+    border: 1px solid white;
+`
+
 const Wrapper = styled.div`
-    min-width: 100%;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-rows: 100px;
 `
 
 export default Wardrobe
