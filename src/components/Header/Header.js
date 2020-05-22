@@ -10,7 +10,7 @@ const Header = ({title}) => {
         <>
             {sidebarToggle === 'true' ? <Sidebar sidebarToggle={sidebarToggle} setSidebarToggle={setSidebarToggle}/> : <Sidebar setSidebarToggle={setSidebarToggle} sidebarToggle={sidebarToggle}/>}
             <Headerpiece onClick = {() => setSidebarToggle('true')}>
-                <TextDiv>{title}</TextDiv>
+                <TextDiv>{title.toUpperCase()}</TextDiv>
             </Headerpiece>
         </>
     )

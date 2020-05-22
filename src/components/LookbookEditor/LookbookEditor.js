@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {useSelector} from 'react-redux';
-import {useHistory} from 'react-router-dom';
+import {useHistory, Link} from 'react-router-dom';
 
 import Header from '../Header/Header';
 import Loading from '../Loading/Loading';
@@ -28,68 +28,56 @@ const LookbookEditor = () => {
         }
     },[lookbookRefresher])
 
-    console.log(lookbookRefresher);
-
-    const deleteLookbook = (name) => {
+    const deleteLookbook = (lookbookId) => {
         fetch('/api/deletelookbook', {
             method: 'PUT',
             headers: {'content-type' : 'application/json'},
             body: JSON.stringify({
-                name: name,
+                lookbookId: lookbookId,
                 _id: user._id
             })
         })
         .then(res=> res.json())
         .then(data => {
-            setLookbookRefresher(true)
-            console.log(data)
+            setUserLookbook(data.data)
         })
     }
 
     if(userLookbook) {
-        if(userLookbook.length === 0) {
-            return (
-            <>
-            {newLookbookToggle ? <NewLookbook setLookbookRefresher={setLookbookRefresher} setNewLookbookToggle={setNewLookbookToggle} lookbookRefresher={lookbookRefresher}/>: null}
-            <Header title={'LOOKBOOK'}/>
-            <Wrapper>
-                <div style={{textAlign:'center', marginTop:'25px'}}>
-                    ADD SOMETHING TO YOUR LOOKBOOK
-                </div>
-            </Wrapper>
-            <FooterDiv onClick = {() => setNewLookbookToggle(true)}>ADD NEW LOOKBOOK</FooterDiv>
-            </>
-            )
-        } else {
-            return (
-            <>
-            {newLookbookToggle ? <NewLookbook setLookbookRefresher={setLookbookRefresher} setNewLookbookToggle={setNewLookbookToggle}/> : null}
-            <Header title={'LOOKBOOK'}/>
-            <Wrapper>
-                {userLookbook.map(lookbook => {
-                    return (
-                        <div style={{display:'flex', flexDirection:'column'}}>
-                            <div style={{display:'flex', marginBottom:'12px'}}>
-                                <LookbookTitle>{lookbook.name}</LookbookTitle>
-                                <DeleteButton onClick={() => deleteLookbook(lookbook.name)}>X</DeleteButton>
-                            </div>
-                            <LookbookDiv>  
-                                {lookbook.looks.map(look => {
-                                    return (
-                                        <LookbookImg src={look.imgURL} alt={look.description}/>
-                                    )
-                                })}
-                            </LookbookDiv>
+        return (
+        <>
+        {newLookbookToggle && <NewLookbook userLookbook={userLookbook} setUserLookbook={setUserLookbook} setNewLookbookToggle={setNewLookbookToggle}/>}
+        <Header title={'LOOKBOOK'}/>
+        <Wrapper>
+            {userLookbook.length ? userLookbook.map((lookbook, index) => {
+                return (
+                    <div key={index + 1} style={{display:'flex', flexDirection:'column'}}>
+                        <div style={{display:'flex', marginBottom:'12px'}}>
+                            <LookbookTitle>{lookbook.name}</LookbookTitle>
+                            <DeleteButton onClick={() => deleteLookbook(lookbook.lookbookId)}>X</DeleteButton>
                         </div>
-                    )
-                })}
-            </Wrapper>
-            <FooterDiv onClick = {() => setNewLookbookToggle(true)}>
-                ADD NEW LOOKBOOK
-            </FooterDiv>
-            </>
+                        <LookbookDiv>  
+                            {lookbook.looks.map((look, index) => {
+                                return (
+                                    <Link key={index+1} to = {`/viewer/lookbook/${lookbook.lookbookId}/${user._id}/${index}`}><LookbookImg key={index+1} src={look.imgURL} alt={look.description}/></Link>
+                                )
+                            })}
+                        </LookbookDiv>
+                    </div>
+                )
+            })
+            :
+            <div style={{textAlign:'center', marginTop:'25px'}}>
+                ADD SOMETHING TO YOUR LOOKBOOK
+            </div>
+            }
+        </Wrapper>
+        <FooterDiv onClick = {() => setNewLookbookToggle(true)}>
+            ADD NEW LOOKBOOK
+        </FooterDiv>
+        </>
         )
-    }} return <Loading/>
+    } return <Loading/>
 }
 
 const DeleteButton = styled.button`

@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {Link} from 'react-router-dom'
+
 const Wardrobe = ({user}) => {
     if (user.data.wardrobe.length >= 1) {
         return (
             <Wrapper>                
-                {user.data.wardrobe.map(item => {
-                    return <ImageItem src={item.imgURL} alt={item.description}/>
+                {user.data.wardrobe.map((item, index) => {
+                    return <Link key={index+1} to = {`/viewer/wardrobe/none/${user.data._id}/${index}`}><ImageItem src={item.imgURL} alt={item.description}/></Link>
                 })}
             </Wrapper>
         )
@@ -17,7 +19,8 @@ const Wardrobe = ({user}) => {
 
 const ImageItem = styled.img`
     height: 100px;
-    object-fit: contain;
+    width: 100%;
+    object-fit: scale-down;
     border: 1px solid white;
 `
 

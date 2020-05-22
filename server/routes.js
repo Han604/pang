@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const {commentHandler, individualPostHandler, exploreHandler, deleteWardrobeHandler, wardrobeHandler, unfollowHandler, deleteLookbookHandler, lookbookHandler, followHandler, changeAvatarHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler } = require('./handlers')
+const {viewerHandler ,commentHandler, individualPostHandler, exploreHandler, deleteWardrobeHandler, wardrobeHandler, unfollowHandler, deleteLookbookHandler, lookbookHandler, followHandler, changeAvatarHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler } = require('./handlers')
 
 router.post('/api/signup', signupHandler)
 
@@ -9,6 +9,8 @@ router.post('/api/post', postHandler)
 router.post('/api/signin', signinHandler)
 
 router.get('/api/post/:postId', individualPostHandler)
+
+router.get('/api/viewer/:type/:albumId/:userId', viewerHandler)
 
 router.get('/api/explore', exploreHandler)
 

@@ -42,7 +42,6 @@ const Profile = () => {
         }) 
     }
 
-    console.log(refreshUser)
     const unfollow = () => {
         console.log('unfollow')
         fetch(`/api/user/unfollow/${_id}/${state.users._id}`, {

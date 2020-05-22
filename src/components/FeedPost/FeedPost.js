@@ -24,7 +24,7 @@ const FeedPost = ({post}) => {
             <Header>
                 <div style={{margin:"6px 0 6px 12px"}} onClick={(ev) => toProfile(ev)}>{post.username}</div>
             </Header>
-        {post.imgURL ? <PostImage src={post.imgURL} alt={post.description}/> : <PostDescription>{post.description}</PostDescription>}
+            {post.imgURL ? <PostImage src={post.imgURL} alt={post.description}/> : <PostDescription>{post.description}</PostDescription>}
             <Footer>
                 <div style={{margin:"6px 0 6px 12px", display:'flex'}}>
                     <div>{post.comments.length} interactions </div>

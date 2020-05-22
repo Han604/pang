@@ -5,14 +5,14 @@ import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import './App.css'
 
-import Splashscreen from './components/Splashscreen/Splashscreen'
+import Splashscreen from './components/Splashscreen/Splashscreen';
 import Homefeed from "./components/Homefeed/Homefeed";
 import Profile from "./components/Profile/Profile";
-import LookbookEditor from './components/LookbookEditor/LookbookEditor'
-import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor'
-import Explore from './components/Explore/Explore'
+import LookbookEditor from './components/LookbookEditor/LookbookEditor';
+import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor';
+import Explore from './components/Explore/Explore';
 import IndividualPost from './components/IndividualPost/IndividualPost';
-import Loading from './components/Loading/Loading'
+import Viewer from './components/Viewer/Viewer';
 
 function App() {
   return (
@@ -38,6 +38,9 @@ function App() {
         </Route>
         <Route exact path ='/post/:postId'>
           <IndividualPost/>
+        </Route>
+        <Route exact path ='/viewer/:type/:albumId/:userId/:index'>
+          <Viewer/>
         </Route>
       </Switch>
     </Router>

@@ -40,10 +40,10 @@ const IndividualPost = () => {
     } else {
         return (
             <>
-            {commentToggle ? <NewComment post={post} refresher={refresher} setRefresher={setRefresher} setCommentToggle={setCommentToggle}/> : null}
+            {commentToggle && <NewComment post={post} refresher={refresher} setRefresher={setRefresher} setCommentToggle={setCommentToggle}/>}
             <Wrapper>
                 <Header title={(post.data.username).toUpperCase() + '\'S POST'}/>
-                    {post.data.imgURL ? <PostImage src={post.data.imgURL} alt={'IMAGE CONTENT'}/> : null}
+                    {post.data.imgURL && <PostImage src={post.data.imgURL} alt={'IMAGE CONTENT'}/>}
                 <InfoDiv>
                     <UnderlineDiv onClick = {(ev)=> toProfile(ev)}>
                         <UsernameDiv>{post.data.username}</UsernameDiv>
@@ -52,7 +52,7 @@ const IndividualPost = () => {
                         </DescriptionDiv>
                     </UnderlineDiv>
                     <CommentDiv>
-                        {post.data.comments.map(comment => {
+                        {post.data.comments.map((comment, index) => {
                             return(
                                 <IndividualComment 
                                     username={comment.username} 
@@ -62,6 +62,7 @@ const IndividualPost = () => {
                                     itemName = {comment.itemName}
                                     brand = {comment.brand}
                                     link = {comment.link}
+                                    key = {index + 1}
                                 />
                             )
                         })}

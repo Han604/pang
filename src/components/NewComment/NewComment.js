@@ -12,7 +12,6 @@ const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
     const [link, setLink] = React.useState('')
 
     const user = useSelector(state => state.users);
-    console.log(post)
     const sendComment = () => {
         if(!description) return
         console.log("pang")

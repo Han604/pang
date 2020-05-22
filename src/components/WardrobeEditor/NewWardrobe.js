@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useSelector } from 'react-redux';
 
-const NewWardrobe = ({setNewWardrobeToggle, setWardrobeRefresher, wardrobeRefresher}) => {
+const NewWardrobe = ({setNewWardrobeToggle, setUserWardrobe, userWardrobe}) => {
     const [itemName, setItemName] = React.useState('');
     const [imageURL, setImageURL] = React.useState(null);
     const [brand, setBrand] = React.useState(''); 
@@ -11,9 +11,9 @@ const NewWardrobe = ({setNewWardrobeToggle, setWardrobeRefresher, wardrobeRefres
 
     const user = useSelector(state => state.users);
 
-    const completeWardrobe = () => {
+    const completeWardrobe = async () => {
         if(!itemName || !imageURL ) return
-        fetch('/api/newwardrobe', {
+        await fetch('/api/newwardrobe', {
             method: 'PUT',
             headers: {
                 'content-type' : 'application/json'
@@ -28,8 +28,7 @@ const NewWardrobe = ({setNewWardrobeToggle, setWardrobeRefresher, wardrobeRefres
         })
         .then(res=> res.json())
         .then(data => {
-            console.log(data);
-            setWardrobeRefresher(wardrobeRefresher + 1);
+            setUserWardrobe(data.data);
             setNewWardrobeToggle(false);
         })
     }

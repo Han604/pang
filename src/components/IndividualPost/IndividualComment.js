@@ -8,16 +8,16 @@ const IndividualComment = ({link, username, description, imgURL, userId, itemNam
         <UsernameDiv>{username}</UsernameDiv>
         <div>{description}</div>
     </Wrapper> 
-    {imgURL ? 
+    {imgURL &&
       <ImageWrapper>
         <ImagePost src={`${imgURL}`} alt={itemName}/>
         <ItemDetailWrapper>
           <ItemName>{itemName.toUpperCase()}</ItemName>
           <Brand>{brand.toUpperCase()}</Brand>
-          <ItemLink url={`${link}`}><ButtonLink>{link ? 'GO TO SITE' : 'NO LINK'}</ButtonLink></ItemLink>
+          <ButtonLink><ItemLink href={`${link}`}>{link ? 'GO TO SITE' : 'NO LINK'}</ItemLink></ButtonLink>
         </ItemDetailWrapper>
-      </ImageWrapper> :
-      null}
+      </ImageWrapper>
+      }
     </>
     )
 }
@@ -31,7 +31,11 @@ const ButtonLink = styled.button`
 `
 
 const ItemLink = styled.a`
-
+text-decoration: none;
+:visited {
+  color: white;
+  text-decoration: none;
+}
 `
 
 const Brand = styled.div`
@@ -47,6 +51,7 @@ const ItemDetailWrapper = styled.div`
   flex-direction: column;
   margin-top: 6px;
   margin-bottom: 12px;
+  margin-left: 6px;
 `
 
 const ImageWrapper = styled.div`

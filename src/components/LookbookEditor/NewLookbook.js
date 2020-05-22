@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useSelector } from 'react-redux';
 
-const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher, lookbookRefresher}) => {
+const NewLookbook = ({setNewLookbookToggle, setUserLookbook, userLookbook}) => {
     const [lookbookName, setLookbookName] = React.useState('')
     const [image, setImage] = React.useState(null)
     const [imageURL, setImageURL] = React.useState(null)
@@ -13,7 +13,6 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher, lookbookRefres
     const user = useSelector(state => state.users);
 
     const completeLookbook = () => {
-        console.log(lookbookName, user._id, lookbookArray)
         fetch('/api/newlookbook', {
             method: 'PUT',
             headers: {'content-type': 'application/json'},
@@ -25,16 +24,13 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher, lookbookRefres
         })
         .then(res=> res.json())
         .then(data=> {
-            console.log(data);
-            setLookbookRefresher( 1 ? lookbookRefresher -1 : lookbookRefresher + 1)
+            setUserLookbook(data.data)
             setNewLookbookToggle(false);
         })
     }
 
     const newLook = ev => {
         setImage(ev.target.files[0])
-        console.log(image)
-        console.log(ev.target.files[0])
         const data = new FormData();
         data.append('file', ev.target.files[0]);
         data.append('upload_preset', 'dev-pang');
@@ -57,16 +53,13 @@ const NewLookbook = ({setNewLookbookToggle, setLookbookRefresher, lookbookRefres
             imgURL: imageURL,
             description: description,
         }
-        console.log(tempObj)
         let tempArray = [...lookbookArray]
         tempArray.push(tempObj)
         setLookbookArray(tempArray)
-        console.log(lookbookArray)
         setImage(null)
         setDescription('')
         setImageURL(null)
     }
-    console.log(lookbookArray)
     return (
         <>
         <BodyDiv>

@@ -94,7 +94,7 @@ const BodyDiv = styled.div`
     width: 100%;
     height: 70%;
     background-color: white;
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     display: flex;
     flex-direction: column;

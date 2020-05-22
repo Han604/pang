@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {useSelector} from 'react-redux'
-import {useHistory} from 'react-router-dom'
+import {useHistory, Link} from 'react-router-dom'
 
 import Header from '../Header/Header';
 import NewWardrobe from './NewWardrobe';
@@ -13,7 +13,6 @@ const WardrobeEditor = () => {
 
     const [newWardrobeToggle, setNewWardrobeToggle] = React.useState(false);
     const [userWardrobe, setUserWardrobe] = React.useState(null);
-    const [wardrobeRefresher, setWardrobeRefresher] = React.useState(0) 
     
     const user = useSelector(state => state.users)
 
@@ -25,9 +24,11 @@ const WardrobeEditor = () => {
         if(user._id) {
             fetch(`api/user/${user._id}`)
             .then(res => res.json())
-            .then(data => setUserWardrobe(data.data.wardrobe))
+            .then(data => {
+                setUserWardrobe(data.data.wardrobe)
+            })
         }
-    }, [wardrobeRefresher])
+    }, [])
 
     const deleteItem = (itemId) => {
         console.log(itemId)
@@ -41,44 +42,36 @@ const WardrobeEditor = () => {
         })
         .then(res => res.json())
         .then(data => {
-            setWardrobeRefresher(wardrobeRefresher + 1)
-            console.log(data)
+            setUserWardrobe(data.data)
+            console.log(data, 'delete data')
         })
     }
 
     if(userWardrobe) {
-        if(userWardrobe.length === 0) {
-            return (
-            <>
-            {newWardrobeToggle ? <NewWardrobe wardrobeRefresher={wardrobeRefresher} setWardrobeRefresher={setWardrobeRefresher} setNewWardrobeToggle = {setNewWardrobeToggle}/> : null}
-            <Header title={'WARDROBE'}/>
-                <div style={{textAlign:'center', marginTop:'25px'}}>
-                    ADD SOMETHING TO YOUR WARDROBE
-                </div>
-            <FooterDiv onClick={()=>setNewWardrobeToggle(true)}>ADD NEW WARDROBE</FooterDiv>
-            </>
-        )
-    } else if (userWardrobe.length >= 1){
         return (
             <>
-            {newWardrobeToggle ? <NewWardrobe wardrobeRefresher={wardrobeRefresher} setWardrobeRefresher={setWardrobeRefresher} setNewWardrobeToggle = {setNewWardrobeToggle}/> : null}
+            {newWardrobeToggle && <NewWardrobe userWardrobe={userWardrobe} setUserWardrobe={setUserWardrobe} setNewWardrobeToggle = {setNewWardrobeToggle}/>}
             <Header title={'WARDROBE'}/>
             <Wrapper>
-                <div>
-                    {userWardrobe.map(item => {
-                    return (
-                        <ItemDiv style={{display:'flex'}}>
-                            <ImageItem src={item.imgURL} alt={item.description}/>
-                            <DeleteButton onClick={() => deleteItem(item.itemId)}>X</DeleteButton>
-                        </ItemDiv>
-                    )
-                    })}
-                </div>
+                    {userWardrobe.length ? userWardrobe.map((item, index) => {
+                        return (
+                            <ItemDiv key={index} style={{display:'flex'}}>
+                                <Link to = {`/viewer/wardrobe/none/${user._id}/${index}`}>
+                                    <ImageItem src={item.imgURL} alt={item.description}/>
+                                </Link>
+                                <DeleteButton onClick={() => deleteItem(item.itemId)}>X</DeleteButton>
+                            </ItemDiv>
+                        )
+                    })
+                    :
+                    <div style={{textAlign:'center', marginTop:'25px'}}>
+                        ADD SOMETHING TO YOUR WARDROBE
+                    </div>}
             </Wrapper>
             <FooterDiv onClick={()=>setNewWardrobeToggle(true)}>ADD NEW WARDROBE</FooterDiv>
             </>
         )
-    }} return <Loading/>
+    } return <Loading/>
 }
 
 const ItemDiv = styled.div` 
@@ -87,7 +80,9 @@ const ItemDiv = styled.div`
 
 const ImageItem = styled.img`
     height: 100px;
-    object-fit: contain;
+    width: 100%;
+    border: 1px solid white;
+    object-fit: scale-down;
 `
 
 const DeleteButton = styled.button`
@@ -95,7 +90,7 @@ const DeleteButton = styled.button`
     width: 20px;
     outline: none;
     border: none;
-    right: 12px;
+    right: 24px;
     top: 12px;
     background-color: white;
     position: relative;

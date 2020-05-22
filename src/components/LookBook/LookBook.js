@@ -1,21 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {Link} from 'react-router-dom'
+
 const Lookbook = ({user}) => {
     if (user.data.lookbook.length) {
         return (
             <Wrapper>
                 <LookbookDiv>
-                    {user.data.lookbook.map(lookbook => {
+                    {user.data.lookbook.map((lookbook, index) => {
                         return (
-                            <>
+                            <div key={index+1}>
                                 <div style={{margin:'6px 0 6px 12px'}}>{lookbook.name}</div>
                                 <ScrollingDiv>
                                     {lookbook.looks.map((item, index) => {
-                                        return <LookbookItem key={index + 1} src={item.imgURL} alt={item.description}/>
+                                        return (
+                                            <Link key={index + 1} to = {`/viewer/lookbook/${lookbook.lookbookId}/${user.data._id}/${index}`}>
+                                                <LookbookItem src={item.imgURL} alt={item.description}/>
+                                            </Link>
+                                        )
                                     })}
                                 </ScrollingDiv>
-                            </>
+                            </div>
                         )
                     })}
                 </LookbookDiv>

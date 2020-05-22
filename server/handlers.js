@@ -7,7 +7,6 @@ const shortid = require('shortid')
 
 const saltRounds = 10
 
-
 require('dotenv').config();
 
 const client = new MongoClient('mongodb://localhost:27017', {
@@ -219,21 +218,54 @@ const wardrobeHandler = async (req, res) => {
     const db = client.db('pang')
     await db.collection('users').updateOne({_id: _id}, {$push : {wardrobe : {itemId: itemId, imgURL: imgURL, link : link, brand : brand, itemName : itemName}}}, (err, result) => {
         if (result) {
-            res.status(200).json({status: 200, data: result})
+            db.collection('users').findOne({_id:_id}, (err, result) => {
+                console.log(result)
+                res.status(200).json({status: 200, data: result.wardrobe})
+            })
         } else {
             res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
         }
     })
 }
 
+const viewerHandler = async (req, res) => {
+    const type = req.params.type;
+    const userId = req.params.userId;
+    const albumId = req.params.albumId
+
+    await client.connect();
+    const db = client.db('pang');
+    await db.collection('users').findOne({_id: userId}, (err, result) => {
+        if(result) {
+            if(type === 'lookbook') {
+                result.lookbook.forEach(book => {
+                    if (book.lookbookId === albumId) {
+                        res.status(200).json({status: 200, data: book})
+                    } else {
+                        res.status(400).json({status: 400, message: 'ERROR ALBUM NOT FOUND'})
+                    }
+                })
+            } else if (type === 'wardrobe'){
+                if (result.wardrobe) {
+                    res.status(200).json({status:200, data: result.wardrobe});
+                } else {
+                    res.status(400).json({status: 400, message: 'ERROR ALBUM NOT FOUND'})
+                }
+            }
+        }
+    })
+}
 
 const lookbookHandler = async (req, res) => {
     const {user_id, name, lookbook} = req.body;
+    const lookbookId = shortid.generate();
     await client.connect();
     const db = client.db('pang');
-    await db.collection('users').updateOne({_id: user_id}, {$push : { lookbook : {name: name, looks: lookbook}}}, (err, result) => {
+    await db.collection('users').updateOne({_id: user_id}, {$push : { lookbook : {name: name, lookbookId: lookbookId, looks: lookbook}}}, (err, result) => {
         if (result) {
-            res.status(200).json({status: 200, data: result})
+            db.collection('users').findOne({_id: user_id}, (err, result) => {
+                res.status(200).json({status: 200, data: result.lookbook})
+            })
         } else {
             res.status(400).json({status: 400, message: 'ERROR USER NOT FOUND'})
         }
@@ -277,7 +309,7 @@ const deleteWardrobeHandler = async (req, res) => {
                 result.wardrobe.splice(index, 1);
                 db.collection('users').updateOne({_id: _id}, {$set : {wardrobe: result.wardrobe}}, (err, result2) => {
                     console.log(result2)
-                    res.status(200).json({status: 200, data: result2})
+                    res.status(200).json({status: 200, data: result.wardrobe})
                 })
             }
         })
@@ -285,16 +317,16 @@ const deleteWardrobeHandler = async (req, res) => {
 }
 
 const deleteLookbookHandler = async (req, res) => {
-    const {name, _id} = req.body;
+    const {lookbookId, _id} = req.body;
     await client.connect();
     const db = client.db('pang');
     await db.collection('users').findOne({_id : _id}, (err, result) => {
         result.lookbook.forEach((book, index) => {
-            if (book.name === name) {
+            if (book.lookbookId === lookbookId) {
                 result.lookbook.splice(index, 1);
                 db.collection('users').updateOne({_id:_id}, {$set : {lookbook: result.lookbook}}, (err, result2) => {
                     console.log(result2)
-                    res.status(200).json({status: 200, data: result2}) 
+                    res.status(200).json({status: 200, data: result.lookbook}) 
                 })
             }
         })
@@ -331,4 +363,4 @@ const individualPostHandler = async (req, res) => {
     })
 }
 
-module.exports = { commentHandler, individualPostHandler, exploreHandler, wardrobeHandler, deleteWardrobeHandler, deleteLookbookHandler, lookbookHandler, followHandler, unfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};
+module.exports = { viewerHandler, commentHandler, individualPostHandler, exploreHandler, wardrobeHandler, deleteWardrobeHandler, deleteLookbookHandler, lookbookHandler, followHandler, unfollowHandler, signinHandler, signupHandler, postHandler, readHandler, userFetchHandler, changeAvatarHandler};

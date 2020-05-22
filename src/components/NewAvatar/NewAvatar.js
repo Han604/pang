@@ -40,24 +40,24 @@ const NewAvatar = ({avatarToggle, setAvatarToggle, setRefreshUser, refreshUser})
             })
         })
     }
-
-    if (avatarToggle) {
-        return (
-            <>
-                <BodyDiv>
-                    <TitleDiv>NEW AVATAR</TitleDiv>
-                    <StyledForm>
-                        <StyledFile type='file' onChange= {ev => setImage(ev.target.files[0])}/>
-                        <StyledUpload value="UPLOAD" onClick = {() => uploadImage()} readonly/>
-                    </StyledForm>
-                </BodyDiv>
-                <OpacityDiv onClick={()=>setAvatarToggle(false)}/>
-            </>
-        )
-    } else {
-        return <div style={{display:'none'}}>invisible</div>
-    }
+    return (
+        <div>
+        { avatarToggle &&
+        <>
+            <BodyDiv>
+                <TitleDiv>NEW AVATAR</TitleDiv>
+                <StyledForm>
+                    <StyledFile type='file' onChange= {ev => setImage(ev.target.files[0])}/>
+                    <StyledUpload value="UPLOAD" onClick = {() => uploadImage()} readonly/>
+                </StyledForm>
+            </BodyDiv>
+            <OpacityDiv onClick={()=>setAvatarToggle(false)}/>
+        </>
+        }
+        </div>
+    )
 }
+
 
 const OpacityDiv = styled.div`
     position: absolute;

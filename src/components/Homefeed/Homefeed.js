@@ -45,7 +45,7 @@ const Homefeed = () => {
     } else if (posts.data.length >= 1) {
         return (
             <>
-                {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
+                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
                 <Header title={user.username}/>
                 {posts.data.map((post, index) => {
                     return <FeedPost key={index + 1} post={post}/>
@@ -57,9 +57,9 @@ const Homefeed = () => {
     } else if (posts.data.length === 0)
         return (
             <>
-                {newPostToggle === true ? <OpacityDiv onClick={() => setNewPostToggle(false)}/>: null}
+                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
                 <Header title={user.username}/>
-                <div>NO POSTS, FOLLOW SOMEONE</div>
+                <div style={{textAlign:'center', marginTop:'25px'}}>NO POSTS, FOLLOW SOMEONE</div>
                 <StyledButton onClick={() => createNewPost()}> + </StyledButton>
                 {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
             </>
@@ -67,7 +67,7 @@ const Homefeed = () => {
 }
 
 const OpacityDiv = styled.div`
-    position: absolute;
+    position: fixed;
     height: 100%;
     width: 100%;
     background-color: grey;
