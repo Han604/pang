@@ -3,13 +3,11 @@ import styled from 'styled-components';
 
 import { useSelector } from 'react-redux'
 
-const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
+const NewAvatar = ({avatarToggle, setAvatarToggle, setRefreshUser, refreshUser}) => {
+    const [image, setImage] = React.useState(null);
 
-    const [image, setImage] = React.useState(null)
-    const [description, setDescription] = React.useState('')
-
-    const user = useSelector(state => state.users);
-
+    const user = useSelector(state => state.users)
+    
     const uploadImage = () => {
         const data = new FormData();
         data.append('file', image);
@@ -20,40 +18,55 @@ const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
         })
         .then(res=>res.json())
         .then(data => {
+            console.log(data.secure_url)
             const imgURL = data.secure_url;
-            fetch('/api/post', {
-                method: 'POST',
-                headers: {'content-type': 'application/json'},
+            console.log(imgURL, user._id, 'req.body')
+            fetch('/api/user/avatar', {
+                method: 'PUT',
+                headers: {'content-type' : 'application/json'},
                 body: JSON.stringify({
                     imgURL: imgURL,
-                    description: description,
-                    user_id: user._id,
-                    username: user.username
+                    user_id: user._id
                 })
             })
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
-                    setNewPostToggle(false)
-                    setFeedRefresher(feedRefresher + 1)
+                    setRefreshUser(refreshUser + 1)
+                    setAvatarToggle(false)
                 } else {
-                    console.log('SOMETHING WENT WRONG PLEASE TRY AGAIN')
+                    console.log('error message')
                 }
             })
         })
     }
-
     return (
-        <BodyDiv>
-            <TitleDiv>NEW POST</TitleDiv>
-            <StyledForm>
-                <StyledTextArea maxLength={500} placeholder ={'WRITE SOMETHING'} value = {description} onChange={ev => setDescription(ev.target.value)}></StyledTextArea>
-                <StyledFile type='file' onChange={ev=> setImage(ev.target.files[0])}/>
-                <StyledUpload value="UPLOAD" onClick = {() => uploadImage()} readonly/>
-            </StyledForm>
-        </BodyDiv>
+        <div>
+        { avatarToggle &&
+        <>
+            <BodyDiv>
+                <TitleDiv>NEW AVATAR</TitleDiv>
+                <StyledForm>
+                    <StyledFile type='file' onChange= {ev => setImage(ev.target.files[0])}/>
+                    <StyledUpload value="UPLOAD" onClick = {() => uploadImage()} readonly/>
+                </StyledForm>
+            </BodyDiv>
+            <OpacityDiv onClick={()=>setAvatarToggle(false)}/>
+        </>
+        }
+        </div>
     )
 }
+
+
+const OpacityDiv = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: grey;
+    opacity: 0.25;
+    z-index: 2;
+`
 
 const StyledFile = styled.input`
     margin-left: 100px;
@@ -75,17 +88,6 @@ const StyledForm = styled.form`
     align-items: center;
 `
 
-const StyledTextArea = styled.textarea`
-    width: 80%;
-    height: 100px;
-    padding: 10px;
-    border: 1ps solid grey;
-    overflow: auto;
-    outline: none;
-    resize: none;
-    margin-bottom: 12px;
-`
-
 const TitleDiv = styled.div`
     margin: 12px 0px 12px 0px;
 `
@@ -94,7 +96,7 @@ const BodyDiv = styled.div`
     width: 100%;
     height: 70%;
     background-color: white;
-    position: fixed;
+    position: absolute;
     bottom: 0px;
     display: flex;
     flex-direction: column;
@@ -102,4 +104,4 @@ const BodyDiv = styled.div`
     z-index: 3;
 `
 
-export default NewPost
+export default NewAvatar
