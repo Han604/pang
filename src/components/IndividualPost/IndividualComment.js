@@ -59,6 +59,7 @@ const ImageWrapper = styled.div`
   border: 1px solid black;
   display: flex;
   margin: 6px 0 12px 40px;
+  padding: 6px 0px 6px 6px;
 `
 
 const ImagePost = styled.img`

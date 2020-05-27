@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
 
-const Loading = () => {
+const LoadingDesktop = () => {
   return (
     <Wrapper>
       <div>pang</div>
@@ -41,4 +41,5 @@ const Ripple = styled.div`
   animation: ${ripple} 1s ease-in-out infinite;
 `
 
-export default Loading
+
+export default LoadingDesktop

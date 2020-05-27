@@ -1,15 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-const NewLookbook = ({setNewLookbookToggle, setUserLookbook, userLookbook}) => {
+import {returnBaseState, updateUserState, updateUserLookbook} from '../../actions'
+
+const NewLookbook = () => {
     const [lookbookName, setLookbookName] = React.useState('')
     const [imageURL, setImageURL] = React.useState(null)
     const [description, setDescription] = React.useState('') 
     const [lookbookArray , setLookbookArray] = React.useState([])
 
     const user = useSelector(state => state.users);
+    const dispatch = useDispatch();
 
     const completeLookbook = () => {
         fetch('/api/newlookbook', {
@@ -23,8 +26,9 @@ const NewLookbook = ({setNewLookbookToggle, setUserLookbook, userLookbook}) => {
         })
         .then(res=> res.json())
         .then(data=> {
-            setUserLookbook(data.data)
-            setNewLookbookToggle(false);
+            console.log(data)
+            dispatch(updateUserState())
+            dispatch(returnBaseState())
         })
     }
 
@@ -67,9 +71,9 @@ const NewLookbook = ({setNewLookbookToggle, setUserLookbook, userLookbook}) => {
                 <StyledTextArea maxLength={500} placeholder = {'WRITE SOMETHING'} value = {description} onChange={ev => setDescription(ev.target.value)}></StyledTextArea>
                 <StyledUpload value="UPLOAD" onClick = {() => finishLook()} readonly/>
                 <StyledUpload value="FINISH LOOKBOOK" onClick = {() => completeLookbook()} readonly/>
+                <StyledUpload value="CANCEL" onClick = {() => completeLookbook()} readonly/>
             </StyledForm>
         </BodyDiv>
-        <OpacityDiv onClick={()=>setNewLookbookToggle(false)}/>
         </>
     )
 }
@@ -79,15 +83,6 @@ const StyledInput = styled.input`
     border: 1px solid grey;
     text-align: center;
     margin-bottom: 12px;
-`
-
-const OpacityDiv = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: grey;
-    opacity: 0.25;
-    z-index: 2;
 `
 
 const StyledFile = styled.input`
@@ -127,11 +122,9 @@ const TitleDiv = styled.div`
 `
 
 const BodyDiv = styled.div`
+    margin-top: 40%;
     width: 100%;
-    height: 70%;
     background-color: white;
-    position: absolute;
-    bottom: 0px;
     display: flex;
     flex-direction: column;
     align-items: center;

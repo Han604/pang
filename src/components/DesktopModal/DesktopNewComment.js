@@ -1,16 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
+import { returnBaseState, updateUserState } from '../../actions'
 
+const NewComment = ({ post }) => {
     const [itemName, setItemName] = React.useState('');
     const [imageURL, setImageURL] = React.useState(null);
     const [brand, setBrand] = React.useState('')
     const [description, setDescription] = React.useState('')
     const [link, setLink] = React.useState('')
-
+    const dispatch = useDispatch();
     const user = useSelector(state => state.users);
     const sendComment = () => {
         if(!description) return
@@ -22,7 +23,7 @@ const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
             },
             body: JSON.stringify({
                 itemName: itemName,
-                postId: post.data._id, 
+                postId: post._id, 
                 userId: user._id,
                 username: user.username,
                 brand: brand,
@@ -32,8 +33,8 @@ const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
             })})
             .then(res=> res.json())
             .then(data => {
-                setRefresher(refresher + 1);
-                setCommentToggle(false)
+                dispatch(updateUserState())
+                dispatch(returnBaseState())
             })
         
     }
@@ -56,7 +57,6 @@ const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
         })
     }
     return (
-        <>
         <BodyDiv>
             <TitleDiv>NEW ITEM</TitleDiv>
             <StyledForm>
@@ -66,10 +66,9 @@ const NewComment = ({ post, refresher, setRefresher, setCommentToggle}) => {
                 <StyledInput type='text' onChange={ev=>setLink(ev.target.value)} placeholder={'LINK (OPTIONAL)'}/>
                 <StyledFile type='file' onChange={ev=> addImage(ev)}/>
                 <StyledUpload value="COMMENT" onClick = {() => sendComment()} readonly/>
+                <StyledUpload value="CANCEL" onClick = {() => dispatch(returnBaseState())} readonly/>
             </StyledForm>
         </BodyDiv>
-        <OpacityDiv onClick={()=>setCommentToggle(false)}/> 
-        </>
     )
 }
 
@@ -91,15 +90,6 @@ const StyledInput = styled.input`
     border: 1px solid grey;
     text-align: center;
     margin-bottom: 12px;
-`
-
-const OpacityDiv = styled.div`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: grey;
-    opacity: 0.25;
-    z-index: 2;
 `
 
 const StyledFile = styled.input`
@@ -128,11 +118,9 @@ const TitleDiv = styled.div`
 `
 
 const BodyDiv = styled.div`
+    margin-top: 40%;
     width: 100%;
-    height: 70%;
     background-color: white;
-    position: absolute;
-    bottom: 0px;
     display: flex;
     flex-direction: column;
     align-items: center;

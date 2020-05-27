@@ -213,13 +213,13 @@ const unfollowHandler = async (req, res) => {
 
 const wardrobeHandler = async (req, res) => {
     const {_id, imgURL, link, brand, itemName} = req.body;
+    console.log(_id)
     const itemId = shortid.generate();
     await client.connect();
     const db = client.db('pang')
     await db.collection('users').updateOne({_id: _id}, {$push : {wardrobe : {itemId: itemId, imgURL: imgURL, link : link, brand : brand, itemName : itemName}}}, (err, result) => {
         if (result) {
-            db.collection('users').findOne({_id:_id}, (err, result) => {
-                console.log(result)
+            db.collection('users').findOne({_id: _id}, (err, result) => {
                 res.status(200).json({status: 200, data: result.wardrobe})
             })
         } else {
@@ -257,6 +257,7 @@ const viewerHandler = async (req, res) => {
 }
 
 const lookbookHandler = async (req, res) => {
+    console.log('pang')
     const {user_id, name, lookbook} = req.body;
     const lookbookId = shortid.generate();
     await client.connect();
@@ -264,6 +265,7 @@ const lookbookHandler = async (req, res) => {
     await db.collection('users').updateOne({_id: user_id}, {$push : { lookbook : {name: name, lookbookId: lookbookId, looks: lookbook}}}, (err, result) => {
         if (result) {
             db.collection('users').findOne({_id: user_id}, (err, result) => {
+                console.log(result)
                 res.status(200).json({status: 200, data: result.lookbook})
             })
         } else {

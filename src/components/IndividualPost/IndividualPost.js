@@ -2,18 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {useParams, useHistory} from 'react-router-dom'
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import Header from '../Header/Header'
 import NewComment from '../NewComment/NewComment'
 import IndividualComment from './IndividualComment'
 import Loading from '../Loading/Loading';
 
-const IndividualPost = () => {
+import {toggleComment} from '../../actions'
+
+const IndividualPost = ({matches}) => {
     const [post, setPost] = React.useState(null)
     const [refresher, setRefresher] = React.useState(0)
     const [commentToggle, setCommentToggle] = React.useState(false)
-    const {postId} = useParams()
-    const history = useHistory()
+    const {postId} = useParams();
+    const history = useHistory();
+    const dispatch = useDispatch();
 
     const user = useSelector(state => state.users)
 
@@ -31,16 +34,22 @@ const IndividualPost = () => {
             .then(res=> res.json())
             .then(data=>setPost(data)) 
         }
-    },[refresher])
+    },[refresher, user])
 
-    console.log(post)
+    const newCommentHandler = () => {
+        if(matches.phone === true) {
+            setCommentToggle(true)
+        } else {
+            dispatch(toggleComment(post))
+        }
+    }
 
     if (!post) {
         return <Loading/>
     } else {
         return (
             <>
-            {commentToggle && <NewComment post={post} refresher={refresher} setRefresher={setRefresher} setCommentToggle={setCommentToggle}/>}
+            {matches.phone && commentToggle && <NewComment post={post} refresher={refresher} setRefresher={setRefresher} setCommentToggle={setCommentToggle}/>}
             <Wrapper>
                 <Header title={(post.data.username).toUpperCase() + '\'S POST'}/>
                     {post.data.imgURL && <PostImage src={post.data.imgURL} alt={'IMAGE CONTENT'}/>}
@@ -69,7 +78,7 @@ const IndividualPost = () => {
                     </CommentDiv>
                 </InfoDiv>
                 <FooterDiv>
-                    <FooterText onClick={()=>setCommentToggle(true)}>
+                    <FooterText onClick={()=>newCommentHandler()}>
                         ADD NEW COMMENT
                     </FooterText>
                 </FooterDiv>
@@ -97,21 +106,13 @@ const FooterText = styled.div`
 
 const FooterDiv = styled.div`
     border-top: 1px solid grey;
-    height: 40px; 
-    position: absolute;
+    height: 35px; 
     width: 100%;
-    bottom: 0px;
     background-color: white;
-`
-
-const CommentDescription = styled.div`
-    margin-top: 6px;
-    width: 95%;
-`
-
-const CommentUser = styled.div`
-    font-size: small;
-    color: grey;
+    @media (max-width: 812px) {
+        position: absolute;
+        bottom: 0px;
+    }
 `
 
 const CommentDiv = styled.div`
@@ -129,7 +130,7 @@ const InfoDiv = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: auto;
+    height: calc(100% - 167px);
 `
 
 const PostImage = styled.img`

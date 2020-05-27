@@ -1,16 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Header from '../Header/Header'
 import NewPost from '../NewPost/NewPost'
 import FeedPost from '../FeedPost/FeedPost'
 import Loading from '../Loading/Loading'
+import LoadingDesktop from '../Loading/LoadingDesktop'
 
 import { useHistory } from 'react-router-dom'
+import { toggleNewPost } from '../../actions'
 
-const Homefeed = () => {
+const Homefeed = ({matches}) => {
     const history = useHistory()
+    const dispatch = useDispatch()
 
     const [posts, setPosts] = React.useState(undefined);
     const [newPostToggle, setNewPostToggle] = React.useState(false)
@@ -18,7 +21,11 @@ const Homefeed = () => {
     const user = useSelector(state => state.users);
 
     const createNewPost = () => {
-        setNewPostToggle(true);
+        if (matches.phone === true) {
+            setNewPostToggle(true);
+        } else if (matches.desktop === true) {
+            dispatch(toggleNewPost())
+        }
     }
     
     // redirect if account isn't locked in
@@ -36,35 +43,56 @@ const Homefeed = () => {
         } else {
             setPosts(1)
         }
-    }, [feedRefresher])
-
-    console.log(posts, 'posts')
+    }, [feedRefresher, user])
 
     if(!posts) {
-        return <Loading/>
+        return <Wrapper><LoadingDesktop/></Wrapper>
     } else if (posts.data.length >= 1) {
         return (
-            <>
-                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
-                <Header title={user.username}/>
-                {posts.data.map((post, index) => {
-                    return <FeedPost key={index + 1} post={post}/>
-                })}
-                <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
-            </>
+            <Wrapper>
+                <div>
+                    {newPostToggle === true && 
+                    matches.phone === true && 
+                    <OpacityDiv onClick={() => setNewPostToggle(false)}/>
+                    }
+                    <Header title={user.username}/>
+                    {posts.data.map((post, index) => {
+                        return <FeedPost key={index + 1} post={post}/>
+                    })}
+                    <StyledButton onClick={() => createNewPost()}> + </StyledButton>
+                    {newPostToggle === true && 
+                        matches.phone === true && 
+                        <NewPost feedRefresher={feedRefresher} 
+                            setFeedRefresher={setFeedRefresher} 
+                            setNewPostToggle={setNewPostToggle}
+                        />
+                    }
+                </div>
+            </Wrapper>
         ) 
     } else if (posts.data.length === 0)
         return (
-            <>
-                {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
-                <Header title={user.username}/>
-                <div style={{textAlign:'center', marginTop:'25px'}}>NO POSTS, FOLLOW SOMEONE</div>
-                <StyledButton onClick={() => createNewPost()}> + </StyledButton>
-                {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
-            </>
+            <Wrapper>
+                <div>
+                    {newPostToggle === true && <OpacityDiv onClick={() => setNewPostToggle(false)}/>}
+                    <Header title={user.username}/>
+                    <div style={{textAlign:'center', marginTop:'25px'}}>NO POSTS, FOLLOW SOMEONE</div>
+                    <StyledButton onClick={() => createNewPost()}> + </StyledButton>
+                    {newPostToggle === true ? <NewPost feedRefresher={feedRefresher} setFeedRefresher={setFeedRefresher} setNewPostToggle={setNewPostToggle}></NewPost>: null}
+                </div>
+            </Wrapper>
     )
 }
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
+`
 
 const OpacityDiv = styled.div`
     position: fixed;

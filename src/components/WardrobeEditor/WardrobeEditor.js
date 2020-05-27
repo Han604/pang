@@ -1,15 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {useHistory, Link} from 'react-router-dom'
 
 import Header from '../Header/Header';
 import NewWardrobe from './NewWardrobe';
 import Loading from '../Loading/Loading';
 
-const WardrobeEditor = () => {
+import {toggleWardrobe} from '../../actions'
+
+const WardrobeEditor = ({matches}) => {
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const [newWardrobeToggle, setNewWardrobeToggle] = React.useState(false);
     const [userWardrobe, setUserWardrobe] = React.useState(null);
@@ -20,7 +23,7 @@ const WardrobeEditor = () => {
         history.push('/')
     }
 
-    React.useState(() => {
+    React.useEffect(() => {
         if(user._id) {
             fetch(`api/user/${user._id}`)
             .then(res => res.json())
@@ -28,7 +31,7 @@ const WardrobeEditor = () => {
                 setUserWardrobe(data.data.wardrobe)
             })
         }
-    }, [])
+    }, [user])
 
     const deleteItem = (itemId) => {
         console.log(itemId)
@@ -47,10 +50,18 @@ const WardrobeEditor = () => {
         })
     }
 
+    const newWardrobeHandler = () => {
+        if (matches.phone === true) {
+            setNewWardrobeToggle(true);
+        } else {
+            dispatch(toggleWardrobe())
+        }
+    }
+
     if(userWardrobe) {
         return (
             <>
-            {newWardrobeToggle && <NewWardrobe userWardrobe={userWardrobe} setUserWardrobe={setUserWardrobe} setNewWardrobeToggle = {setNewWardrobeToggle}/>}
+            {matches.phone && newWardrobeToggle && <NewWardrobe userWardrobe={userWardrobe} setUserWardrobe={setUserWardrobe} setNewWardrobeToggle = {setNewWardrobeToggle}/>}
             <Header title={'WARDROBE'}/>
             <Wrapper>
                     {userWardrobe.length ? userWardrobe.map((item, index) => {
@@ -68,7 +79,7 @@ const WardrobeEditor = () => {
                         ADD SOMETHING TO YOUR WARDROBE
                     </div>}
             </Wrapper>
-            <FooterDiv onClick={()=>setNewWardrobeToggle(true)}>ADD NEW WARDROBE</FooterDiv>
+            <FooterDiv onClick={() => newWardrobeHandler()}>ADD NEW WARDROBE</FooterDiv>
             </>
         )
     } return <Loading/>
@@ -100,21 +111,23 @@ const Wrapper = styled.div`
     background-color: white;
     overflow-y: auto;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 135px);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 100px;
 `
 
 const FooterDiv = styled.div`
-    position: absolute;
-    bottom: 0px;
     border-top: 1px solid lightgrey;
     width: 100%;
     height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
+    @media (max-width: 812px) {
+        position: absolute;
+        bottom: 0px;
+    }
 `
 
 export default WardrobeEditor

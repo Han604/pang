@@ -10,11 +10,13 @@ import Lookbook from '../Lookbook/Lookbook';
 import NewAvatar from '../NewAvatar/NewAvatar';
 import Loading from '../Loading/Loading';
 
+import {toggleAvatar} from '../../actions'
+
 //icons
 import { BsFillPersonPlusFill, BsFillPersonCheckFill } from "react-icons/bs";
 import { FiCamera } from 'react-icons/fi'
 
-const Profile = () => {
+const Profile = ({matches}) => {
     const [loading, setLoading] = React.useState(null);
     const [user, setUser] = React.useState(null)
     const { _id } = useParams();
@@ -23,7 +25,8 @@ const Profile = () => {
     const [refreshUser, setRefreshUser] = React.useState(null);
     const [following, setFollowing] = React.useState(null)
 
-    const history = useHistory()
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const state = useSelector(state => state);
     if (!state.users.email) {
@@ -56,7 +59,6 @@ const Profile = () => {
         })
     }
 
-
     React.useEffect(()=> {
         if (state.users._id) {
             setLoading('loading');
@@ -77,17 +79,27 @@ const Profile = () => {
                 }
             })
         }
-    },[refreshUser])
+    },[refreshUser, state])
+
+    const newAvatarToggleHandler = () => {
+        if (matches.phone) {
+            setAvatarToggle(true)
+        } else if (matches.desktop) {
+            dispatch(toggleAvatar())
+        }
+    }
 
     return (
         loading === 'idle' ?
         <>
+            { matches.phone === true &&
             <NewAvatar refreshUser = {refreshUser} setRefreshUser = {setRefreshUser} setAvatarToggle={setAvatarToggle} avatarToggle={avatarToggle}/>
+            }
             <Header title={user.data.username}/>
             {following === true ?
                 <StyledButton onClick={() => unfollow()}><BsFillPersonCheckFill/></StyledButton> :
                 user.data._id === state.users._id ? 
-                <StyledButton onClick={()=>setAvatarToggle(true)}><FiCamera/></StyledButton> :
+                <StyledButton onClick={()=>newAvatarToggleHandler()}><FiCamera/></StyledButton> :
                 <StyledButton onClick={() => follow()}><BsFillPersonPlusFill/></StyledButton>
             }
             <Wrapper>
@@ -158,13 +170,14 @@ const AvatarWrapper = styled.div`
 
 const Avatar = styled.img`
     object-fit:cover;
-    height: 200px;
+    height: 250px;
     width: 100%;
 `
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
+    background-color: white;
 `
 
 export default Profile

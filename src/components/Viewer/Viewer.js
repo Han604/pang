@@ -34,8 +34,6 @@ const Viewer = () => {
       history.push('/')
     }
   }, [])
-  console.log(album, 'album')
-  console.log(index, 'index')
   
   const backArrow = () => {
     setAlbumIndex(albumIndex - 1)
@@ -44,7 +42,6 @@ const Viewer = () => {
   const forwardArrow = () => {
     setAlbumIndex(albumIndex + 1)
   }
-  console.log(albumIndex)
   
   if (loading === 'idle') {
     return (
@@ -58,7 +55,7 @@ const Viewer = () => {
             <DescriptionDiv>
               <ItemNameDiv>ITEM: {album[albumIndex].itemName.toUpperCase()}</ItemNameDiv>
               <BrandDiv>BRAND: {album[albumIndex].brand.toUpperCase()}</BrandDiv>
-              <ItemLink href={album[albumIndex].link}>{album[albumIndex].link ? 'VISIT WEBSITE' : 'NO LINK'}</ItemLink>
+              <ItemLink href={album[albumIndex].link ? album[albumIndex].link : null}>{album[albumIndex].link ? 'VISIT WEBSITE' : 'NO LINK'}</ItemLink>
             </DescriptionDiv> 
             <Footer onClick={()=>history.goBack()}><div style={{margin:'6px 0px 0px 12px'}}>GO BACK</div></Footer>
           </Wrapper> :
@@ -124,7 +121,7 @@ const BackButton = styled.div`
 `
 
 const ForwardButton = styled.div`
-  position: absolute;
+  position: absolute;  
   right: 10px;
   top: 250px;
   color: black;
@@ -133,11 +130,13 @@ const ForwardButton = styled.div`
 `
 
 const Footer = styled.div`
-    position: absolute;
-    bottom: 0px;
     border-top: 1px solid lightgrey;
     width: 100%;
     height: 35px;
+    @media (max-width: 812px) {
+        position: absolute;
+        bottom: 0px;
+    }
 `
 
 const AlbumImage = styled.img`
