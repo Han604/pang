@@ -1,14 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { returnBaseState, updateUserState } from '../../actions'
 
-const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
+const DesktopNewPost = () => {
 
     const [image, setImage] = React.useState(null)
     const [description, setDescription] = React.useState('')
 
     const user = useSelector(state => state.users);
+    const dispatch = useDispatch();
 
     const uploadImage = () => {
         const data = new FormData();
@@ -34,8 +36,8 @@ const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
             .then(res => res.json())
             .then(data => {
                 if(data.status === 200) {
-                    setNewPostToggle(false)
-                    setFeedRefresher(feedRefresher + 1)
+                    dispatch(updateUserState())
+                    dispatch(returnBaseState())
                 } else {
                     console.log('SOMETHING WENT WRONG PLEASE TRY AGAIN')
                 }
@@ -50,6 +52,7 @@ const NewPost = ({feedRefresher, setFeedRefresher, setNewPostToggle}) => {
                 <StyledTextArea maxLength={500} placeholder ={'WRITE SOMETHING'} value = {description} onChange={ev => setDescription(ev.target.value)}></StyledTextArea>
                 <StyledFile type='file' onChange={ev=> setImage(ev.target.files[0])}/>
                 <StyledUpload value="UPLOAD" onClick = {() => uploadImage()} readonly/>
+                <StyledUpload value="CANCEL" onClick = {() => dispatch(returnBaseState())} readonly/>
             </StyledForm>
         </BodyDiv>
     )
@@ -92,14 +95,12 @@ const TitleDiv = styled.div`
 
 const BodyDiv = styled.div`
     width: 100%;
-    height: 70%;
+    margin-top: 40%;
     background-color: white;
-    position: fixed;
-    bottom: 0px;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 3;
 `
 
-export default NewPost
+export default DesktopNewPost
