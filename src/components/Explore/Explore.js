@@ -24,7 +24,7 @@ const Explore = () => {
     },[])
     if (posts) {
         return (
-            <div style={{backgroundColor:'white'}}>
+            <Overflow>
                 <Header title={'EXPLORE'}/>
                 <Wrapper>
                     {posts.data.map((post, index) => {
@@ -35,18 +35,27 @@ const Explore = () => {
                         )
                     })}
                 </Wrapper>
-            </div>
+            </Overflow>
             
         )
     } else return <Loading/>
 }
 
+const Overflow = styled.div`
+    background-color: white;
+    height: 100%;
+`
+
 const Wrapper = styled.div`
     display: grid;
     grid-auto-rows: 100px;
     grid-template-columns: 1fr 1fr 1fr;
-    height: 100%;
+    height: calc(100vh - 100px);
     background-color: white;
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 const PostImage = styled.img`

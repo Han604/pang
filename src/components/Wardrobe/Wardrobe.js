@@ -29,6 +29,11 @@ const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: 100px;
+    height: calc(100vh - 400px);
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 export default Wardrobe

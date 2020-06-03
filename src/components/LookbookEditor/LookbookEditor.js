@@ -101,7 +101,7 @@ const DeleteButton = styled.button`
     border: none;
     margin-top: 12px;
     margin-left: 12px;
-    background-color: white;
+    background-color: transparent;
 `
 
 const LookbookTitle = styled.div`
@@ -125,10 +125,13 @@ const LookbookImg = styled.img`
 const Wrapper = styled.div`
     background-color: white;
     width: 100%;
-    height: calc(100% - 135px);
+    height: calc(100vh - 135px);
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 const FooterDiv = styled.div`

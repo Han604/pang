@@ -103,18 +103,21 @@ const DeleteButton = styled.button`
     border: none;
     right: 24px;
     top: 12px;
-    background-color: white;
+    background-color: transparent;
     position: relative;
 `
 
 const Wrapper = styled.div`
     background-color: white;
-    overflow-y: auto;
+    overflow-y: scroll;
     width: 100%;
-    height: calc(100% - 135px);
+    height: calc(100vh - 135px);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 100px;
+    grid-auto-rows: 100px;
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 const FooterDiv = styled.div`

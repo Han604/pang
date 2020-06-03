@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const IndividualComment = ({link, username, description, imgURL, userId, itemName, brand}) => {
+  console.log(typeof link)
+  console.log(link)
   return(
     <>
     <Wrapper>
@@ -14,7 +16,7 @@ const IndividualComment = ({link, username, description, imgURL, userId, itemNam
         <ItemDetailWrapper>
           <ItemName>{itemName.toUpperCase()}</ItemName>
           <Brand>{brand.toUpperCase()}</Brand>
-          <ButtonLink><ItemLink href={`${link}`}>{link ? 'GO TO SITE' : 'NO LINK'}</ItemLink></ButtonLink>
+          <ButtonLink><ItemLink href={`${link}`}>{link && link.includes('www.') ? 'GO TO SITE' : 'NO LINK'}</ItemLink></ButtonLink>
         </ItemDetailWrapper>
       </ImageWrapper>
       }

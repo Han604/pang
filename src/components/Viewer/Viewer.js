@@ -40,14 +40,15 @@ const Viewer = () => {
   }
 
   const forwardArrow = () => {
-    setAlbumIndex(albumIndex + 1)
+    setAlbumIndex(albumIndex + 1) 
   }
   
   if (loading === 'idle') {
     return (
       <>
-      <Header title={'viewer'}/>
+      <Header title={'viewer'}/> 
         {type === 'wardrobe' ? 
+        <>
           <Wrapper>
             {albumIndex > 0 && <BackButton onClick={()=>backArrow()}>&lt;</BackButton>}
             {albumIndex < album.length - 1 && <ForwardButton onClick={()=>forwardArrow()}>&gt;</ForwardButton>}
@@ -55,10 +56,13 @@ const Viewer = () => {
             <DescriptionDiv>
               <ItemNameDiv>ITEM: {album[albumIndex].itemName.toUpperCase()}</ItemNameDiv>
               <BrandDiv>BRAND: {album[albumIndex].brand.toUpperCase()}</BrandDiv>
-              <ItemLink href={album[albumIndex].link ? album[albumIndex].link : null}>{album[albumIndex].link ? 'VISIT WEBSITE' : 'NO LINK'}</ItemLink>
+              <ItemLink href={album[albumIndex].link && album[albumIndex].link.includes('www.')  ? album[albumIndex].link : null}>{album[albumIndex].link && album[albumIndex].link.includes('www.') ? 'VISIT WEBSITE' : 'NO LINK'}</ItemLink>
             </DescriptionDiv> 
-            <Footer onClick={()=>history.goBack()}><div style={{margin:'6px 0px 0px 12px'}}>GO BACK</div></Footer>
-          </Wrapper> :
+          </Wrapper>
+          <Footer onClick={()=>history.goBack()}><div style={{margin:'6px 0px 0px 12px'}}>GO BACK</div></Footer>
+        </>
+        :
+        <>
           <Wrapper>
             {albumIndex > 0 && <BackButton onClick={()=>backArrow()}>&lt;</BackButton>}
             {albumIndex < album.looks.length - 1 && <ForwardButton onClick={()=>forwardArrow()}>&gt;</ForwardButton>}
@@ -67,8 +71,9 @@ const Viewer = () => {
               <LookbookName>LOOKBOOK: {album.name.toUpperCase()}</LookbookName>
               <AlbumDescriptionDiv>DESCRIPTION: {album.looks[albumIndex].description}</AlbumDescriptionDiv>
             </DescriptionDiv>
-            <Footer onClick={()=>history.goBack()}><div style={{margin:'6px 0px 0px 12px'}}>GO BACK</div></Footer>
           </Wrapper>
+          <Footer onClick={()=>history.goBack()}><div style={{margin:'6px 0px 0px 12px'}}>GO BACK</div></Footer>
+        </>
           }
       </>
   )} else {
@@ -118,6 +123,12 @@ const BackButton = styled.div`
   color: black;
   outline: none;
   border: none;
+  cursor: pointer;
+  @media (min-width: 813px) {
+        position: absolute;
+        top: 250px;
+        left: 35%;
+    }
 `
 
 const ForwardButton = styled.div`
@@ -127,6 +138,12 @@ const ForwardButton = styled.div`
   color: black;
   outline: none;
   border: none;
+  cursor: pointer;
+  @media (min-width: 813px) {
+        position: absolute;
+        top: 250px;
+        right: 35%;
+    }
 `
 
 const Footer = styled.div`
@@ -149,12 +166,14 @@ const Wrapper = styled.div`
   display:flex;
   justify-content: center;
   flex-direction: column;
+  height: calc(100% - 135px);
 `
 
 const DescriptionDiv = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `
 
 export default Viewer

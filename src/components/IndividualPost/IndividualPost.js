@@ -130,7 +130,7 @@ const InfoDiv = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100% - 167px);
+    height: calc(100vh - 385px);
 `
 
 const PostImage = styled.img`

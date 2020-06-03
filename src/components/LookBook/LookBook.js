@@ -34,11 +34,15 @@ const Lookbook = ({user}) => {
 
 const Wrapper = styled.div`
     width: 100%;
-    overflow-y:auto;
+    overflow-y:scroll;
+    height: calc(100vh - 400px);
+    ::-webkit-scrollbar {
+        display: none;
+    }
 `
 
 const ScrollingDiv = styled.div`
-    overflow-x: auto;
+    overflow-x: scroll;
     width: 100%;
     height: auto;
     display: flex;

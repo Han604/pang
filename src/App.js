@@ -16,6 +16,7 @@ import WardrobeEditor from './components/WardrobeEditor/WardrobeEditor';
 import Explore from './components/Explore/Explore';
 import IndividualPost from './components/IndividualPost/IndividualPost';
 import Viewer from './components/Viewer/Viewer';
+import FourOhFour from './components/FourOhFour/FourOhFour';
 
 //desktop components
 import DesktopModal from './components/DesktopModal/DesktopModal'
@@ -57,6 +58,9 @@ function App() {
                 <Route exact path ='/viewer/:type/:albumId/:userId/:index'>
                   <Viewer />
                 </Route>
+                <Route>
+                  <FourOhFour/>
+                </Route>
               </Switch>
             }
             {matches.desktop &&
@@ -94,6 +98,9 @@ function App() {
                     </Route>
                     <Route exact path ='/viewer/:type/:albumId/:userId/:index'>
                       <Viewer/>
+                    </Route>
+                    <Route>
+                      <FourOhFour/>
                     </Route>
                   </Switch>
                   </div>

@@ -115,6 +115,11 @@ const StyledButton = styled.button`
     outline: none;
     box-shadow: 0 1px 3px 2px rgba(0,0,0,0.25);
     cursor: pointer;
+    @media (min-width: 813px) {
+        position: absolute;
+        top: 130px;
+        right: 35%;
+    }
 `
 
 

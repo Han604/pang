@@ -19,7 +19,9 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   text-shadow: 2px 2px 2px rgba(0,0,0,0.5); 
-
+  @media (max-width: 812px) {
+        position: absolute;
+    }
 `
   const ripple = keyframes`
     from {

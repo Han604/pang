@@ -232,7 +232,7 @@ const viewerHandler = async (req, res) => {
     const type = req.params.type;
     const userId = req.params.userId;
     const albumId = req.params.albumId
-
+    console.log(type, 'type', userId, 'userID', albumId, 'albumID')
     await client.connect();
     const db = client.db('pang');
     await db.collection('users').findOne({_id: userId}, (err, result) => {
@@ -241,19 +241,21 @@ const viewerHandler = async (req, res) => {
                 result.lookbook.forEach(book => {
                     if (book.lookbookId === albumId) {
                         res.status(200).json({status: 200, data: book})
-                    } else {
-                        res.status(400).json({status: 400, message: 'ERROR ALBUM NOT FOUND'})
                     }
                 })
-            } else if (type === 'wardrobe'){
+            } else if(type === 'wardrobe'){
                 if (result.wardrobe) {
                     res.status(200).json({status:200, data: result.wardrobe});
                 } else {
                     res.status(400).json({status: 400, message: 'ERROR ALBUM NOT FOUND'})
                 }
+            } else {
+                res.status(400).json({status: 400, message: 'ERROR ALBUM NOT FOUND'})
             }
         }
-    })
+        
+        }
+    )
 }
 
 const lookbookHandler = async (req, res) => {
