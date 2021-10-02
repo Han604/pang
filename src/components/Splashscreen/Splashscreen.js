@@ -152,7 +152,7 @@ const SignInHeader = styled.div`
     text-align: center;
     height: 100px;
     top: 0px;
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -162,16 +162,21 @@ const SignInHeader = styled.div`
 const SignInBackground = styled.div`
     background-color: white;
     width: 100%;
-    height: 100vh;
+    height: calc(100% - 100px);
     box-sizing: border-box;
     padding: 12px;
 `
 
 const SignInWrapper = styled.div`
-
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 `
 
 const SignUpWrapper = styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 `
 
 const SignInDiv = styled.div`
@@ -183,12 +188,10 @@ const SlidingDiv = styled.div`
     width: 100%;
     text-align: center;
     height: 100px;
-    bottom: 0px;
-    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-content: center;
     `
 
 const StyledSubmit = styled.input`
@@ -199,6 +202,7 @@ const StyledSubmit = styled.input`
     cursor: pointer;
     font: 300 14px 'Open Sans', sans-serif;
     margin-top: 150px;
+    margin-bottom: 150px;
     text-align: center;
 `
 
@@ -206,7 +210,7 @@ const Pang = styled.div`
     color: white;
     text-align: right;
     font: 300 14px 'Open Sans', sans-serif;
-    margin-bottom: 150px;
+    margin-bottom: 100px;
 `
 
 const Styledform = styled.form`
@@ -222,15 +226,16 @@ const StyledInput = styled.input`
     ::placeholder{
         color: white;
         font: 300 14px 'Open Sans', sans-serif;
-    }
+    } 
 `
 
 const BackgroundDiv = styled.div`
     background-color: black;
     width: 100%;
-    height: 100vh;
+    height: calc(100% - 100px);
     box-sizing: border-box;
     padding: 12px;
+    flex-grow: 1;
 `
 
 
